@@ -1297,7 +1297,9 @@
        HỆ THỐNG BẢO VỆ BẢN QUYỀN ĐỘC QUYỀN - NGUYỄN MINH HUY
        KHÔNG THỂ MỞ GIAO DIỆN MÃ NGUỒN BẰNG BẤT CỨ CÁCH NÀO
        ========================================================= */
+    const COPYRIGHT_PROTECTION_ENABLED = false; // đổi thành true để bật lại bảo vệ bản quyền
     (function initCopyrightProtection() {
+      if (!COPYRIGHT_PROTECTION_ENABLED) return;
       // 1. Chống mở chuột phải (Context Menu)
       document.addEventListener('contextmenu', e => {
         e.preventDefault();
@@ -2175,11 +2177,11 @@
     }
 
     const STATION_LOCATIONS = [
-      { step: 1, name: "Kho CFS Nông Sản 01 - KCN Tân Tạo", x: 0, z: -10, street: "Đường Số 2, KCN Tân Tạo, Q. Bình Tân" },
+      { step: 1, name: "Dock Trong Tổng Kho Sa-tras (45.560 m²)", x: 208, z: -222, street: "Tổng Kho Sa-tras, KCN Tân Tạo, Q. Bình Tân" },
       { step: 2, name: "Depot Rỗng Tân Cảng Suối Tiên", x: 90, z: -90, street: "Xa Lộ Hà Nội, TP. Thủ Đức" },
       { step: 3, name: "Trạm Cân Điện Tử 80T Nguyễn Thị Định", x: 190, z: -30, street: "Đường Nguyễn Thị Định, P. Cát Lái" },
       { step: 4, name: "Văn Phòng Khai HQ ECUS5", x: 140, z: 60, street: "Đường Đồng Văn Cống, P. Thạnh Mỹ Lợi" },
-      { step: 5, name: "Chi Cục Hải Quan Cửa Khẩu Cát Lái", x: 70, z: 120, street: "Cổng Liên Cảng Cát Lái" },
+      { step: 5, name: "Chi Cục Hải Quan Cát Lái - Làn Soi Chiếu X-Ray", x: 115, z: 232, street: "Khuôn Viên Chi Cục HQ Cửa Khẩu Cảng Cát Lái" },
       { step: 6, name: "Kiosk e-Port Tân Cảng Sài Gòn", x: -40, z: 100, street: "Khu Dịch Vụ e-Port Cát Lái" },
       { step: 7, name: "Cổng B Cảng Cát Lái (Gate-in) & Bến Tàu", x: -140, z: 20, street: "Cổng B, Cảng Tân Cảng Cát Lái" }
     ];
@@ -2190,7 +2192,7 @@
 
       // Bầu trời chiều hoàng hôn đô thị Sài Gòn rực rỡ
       scene.background = new THREE.Color(0x38bdf8);
-      scene.fog = new THREE.FogExp2(0x38bdf8, 0.004);
+      scene.fog = new THREE.FogExp2(0x7dd3fc, 0.0022);
 
       const w = (container && container.clientWidth) ? container.clientWidth : (window.innerWidth || 800);
       const h = (container && container.clientHeight) ? container.clientHeight : ((window.innerHeight - 80) || 450);
@@ -2205,6 +2207,8 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
       container.appendChild(renderer.domElement);
 
       // Ánh sáng môi trường
@@ -2215,15 +2219,15 @@
       const sunLight = new THREE.DirectionalLight(0xfff7ed, 1.25);
       sunLight.position.set(120, 150, 80);
       sunLight.castShadow = true;
-      sunLight.shadow.mapSize.width = 2048;
-      sunLight.shadow.mapSize.height = 2048;
+      sunLight.shadow.mapSize.width = 4096;
+      sunLight.shadow.mapSize.height = 4096;
       sunLight.shadow.camera.near = 10;
       sunLight.shadow.camera.far = 400;
       sunLight.shadow.camera.left = -150;
       sunLight.shadow.camera.right = 150;
       sunLight.shadow.camera.top = 150;
       sunLight.shadow.camera.bottom = -150;
-      scene.add(sunLight);
+      scene.add(sunLight); scene.add(sunLight.target); window.sunLightRef = sunLight; sunLight.shadow.bias = -0.0004;
 
       const hemiLight = new THREE.HemisphereLight(0x38bdf8, 0x166534, 0.5);
       scene.add(hemiLight);
@@ -2303,7 +2307,7 @@
     // 3. ĐƯỜNG ĐI THỰC TẾ, VỈA HÈ & CÂY XANH
     function buildRoadAndVegetation() {
       // Nền cỏ tự nhiên
-      const grassGeo = new THREE.PlaneGeometry(900, 900);
+      const grassGeo = new THREE.PlaneGeometry(1400, 1400);
       const grassMat = new THREE.MeshLambertMaterial({ 
         map: TextureGenerator.createGrassTexture() 
       });
@@ -2585,6 +2589,8 @@
 
       // ===== 0. HÀNG RÀO AN NINH & RANH GIỚI KHU VỰC LOGISTICS =====
       buildPerimeterSecurityFences();
+      buildMegaWarehouse();
+      buildMegaExtras();
 
       // ===== 1. TỔNG KHO LOGISTICS SA-TRAS (TÂN TẠO - TP.HCM) =====
       const wh1 = new THREE.Group();
@@ -2592,15 +2598,15 @@
         map: TextureGenerator.createWarehouseTexture('TỔNG KHO LOGISTICS SA-TRAS', 'TRUNG TÂM PHÂN PHỐI & BẢO QUẢN HÀNG HÓA CHUẨN ISO', '#0a246a'),
         roughness: 0.55
       });
-      const wh1Body = new THREE.Mesh(new THREE.BoxGeometry(76, 14, 30), wh1Mat);
+      const wh1Body = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.01), wh1Mat);
       wh1Body.position.set(0, 7, -46);
       wh1Body.castShadow = true;
       wh1Body.receiveShadow = true;
       wh1.add(wh1Body);
-      addObstacle(-40, 40, -62, -30, "Tòa Nhà Tổng Kho Sa-tras");
+      
 
       // 5 Cửa dock nâng hạ container tự động (Dock Levelers) & Mái che mưa
-      for (let d = -2; d <= 2; d++) {
+      for (let d = 9; d <= 2; d++) {
         const door = new THREE.Mesh(new THREE.BoxGeometry(6.8, 6.5, 0.4), new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.4 }));
         door.position.set(d * 14, 3.25, -30.8);
         wh1.add(door);
@@ -2711,20 +2717,20 @@
 
       // ===== 5. 4 HỆ THỐNG KHUNG KỆ CÔNG NGHIỆP SA-TRAS =====
       // 5.1 KỆ SELECTIVE (100% Pallet Access)
-      buildSelectiveRacking(scene, 42, -54, 0);
+      
 
       // 5.2 KỆ DOUBLE-DEEP (Sâu 2 Pallet)
-      buildDoubleDeepRacking(scene, 60, -54, 0);
+      
 
       // 5.3 KỆ DRIVE-IN (LIFO - Xe nâng chui vào lòng kệ)
-      buildDriveInRacking(scene, 78, -54, 0);
+      
 
       // 5.4 KỆ PUSH-BACK (Trượt con lăn trọng lực)
-      buildPushBackRacking(scene, 96, -54, 0);
+      
 
       // Biển tổng quan khu kệ lưu trữ bảo quản
       const racksGeneralSign = buildSignBoard(68, 6.5, -36, "KHU LƯU TRỮ BẢO QUẢN KHO SA-TRAS (4 HỆ THỐNG KỆ)", "SELECTIVE • DOUBLE DEEP • DRIVE IN • PUSH BACK", 'info');
-      scene.add(racksGeneralSign);
+      
 
       // ===== 6. KHU TẬP KẾT THIẾT BỊ & TRẠM SẠC ĐIỆN XE NÂNG (CHARGING BAY) =====
       const stagingBay = new THREE.Group();
@@ -2759,8 +2765,8 @@
 
       const chargeSign = buildSignBoard(68, 4.5, -17, "KHU TẬP KẾT THIẾT BỊ & TRẠM SẠC PIN XE NÂNG", "TRẠM SẠC ẮC QUY 48V/80V • BÌNH BỌT FOAM PCCC • RỬA MẮT KHẨN CẤP", 'info');
       stagingBay.add(chargeSign);
-      addObstacle(56, 80, -29, -15, "Khu Vực Tập Kết Thiết Bị & Trạm Sạc Pin");
-      scene.add(stagingBay);
+      
+      
 
       // ===== 7. KHU VỰC HÀNG LẺ CFS / LCL (LCL CONSOLIDATION STATION) =====
       const lclGroup = new THREE.Group();
@@ -2830,8 +2836,8 @@
         wh2.add(fanBlade);
         spinningFansList.push(fanBlade);
       }
-      addObstacle(51, 99, 12, 38, "Kho Lạnh Reefer Logistics");
-      scene.add(wh2);
+      
+      
 
       // ===== 7. QUẦN THỂ BÃI CONTAINER CÁT LÁI KHỔNG LỒ (HÀNG TRĂM CONTAINER - CY & DEPOT) =====
       const yardGroup = new THREE.Group();
@@ -2997,9 +3003,9 @@
       const xraySign = buildSignBoard(70, 9.8, 98.6, "HỆ THỐNG MÁY SOI CONTAINER X-RAY EAGLE", "CHI CỤC HẢI QUAN CÁT LÁI • BÃI SOI CHIẾU CHUYÊN DỤNG", 'warning');
       customs.add(xraySign);
 
-      addObstacle(46, 94, 122, 146, "Trụ Sở Chi Cục Hải Quan Cát Lái");
-      addObstacle(63, 77, 98, 102, "Máy Soi Chiếu Container X-Ray");
-      scene.add(customs);
+      
+      
+      
 
       // ===== 11. KIOSK e-PORT TÂN CẢNG SÀI GÒN =====
       const eportGroup = new THREE.Group();
@@ -3171,19 +3177,472 @@
     }
 
     // HÀNG RÀO AN NINH BẢO VỆ TOÀN KHU VỰC CẢNG & KHO
+    /* ===== TỔNG KHO SA-TRAS MỚI: 340m x 134m = 45.560 m2 (~20x kho cũ 2.280 m2) ===== */
+    const MW = { x0: 40, x1: 380, z0: -314, z1: -180, H: 18 };
+    let mwRoof = null, mwRoofSolid = false, mwForklifts = [], mwInside = false, mwBadge = null;
+    const MW_GATES = [100, 154, 208, 262, 316];
+
+    function mwTex(draw, w, h, rx, ry) {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      draw(c.getContext('2d'), w, h);
+      const t = new THREE.CanvasTexture(c);
+      t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = 8;
+      return t;
+    }
+    function mwInst(geo, mat, n, fill, parent) {
+      const m = new THREE.InstancedMesh(geo, mat, n), o = new THREE.Object3D(); let k = 0;
+      fill((x, y, z, sx, sy, sz, col) => {
+        o.position.set(x, y, z); o.scale.set(sx || 1, sy || 1, sz || 1); o.updateMatrix();
+        m.setMatrixAt(k, o.matrix); if (col) m.setColorAt(k, col); k++;
+      });
+      m.count = k; m.instanceMatrix.needsUpdate = true;
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.frustumCulled = false; parent.add(m); return m;
+    }
+
+    function buildMegaWarehouse() {
+      const g = new THREE.Group(), W = MW.x1 - MW.x0, D = MW.z1 - MW.z0, H = MW.H;
+      const cx = (MW.x0 + MW.x1) / 2, cz = (MW.z0 + MW.z1) / 2;
+      const box = (w, h, d, mat, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); g.add(m); return m; };
+
+      // Đường nội bộ dẫn vào các cổng kho
+      const road = new THREE.Mesh(new THREE.PlaneGeometry(363, 22), new THREE.MeshLambertMaterial({ map: TextureGenerator.createAsphaltTexture() }));
+      road.rotation.x = -Math.PI / 2; road.position.set(198.5, 0.1, -168); road.receiveShadow = true; g.add(road);
+      const dash = mwTex((c, w, h) => { c.fillStyle = '#334155'; c.fillRect(0, 0, w, h); c.fillStyle = '#facc15'; c.fillRect(0, 14, 40, 4); }, 64, 32, 90, 1);
+      const lane = new THREE.Mesh(new THREE.PlaneGeometry(363, 1), new THREE.MeshBasicMaterial({ map: dash })); lane.rotation.x = -Math.PI / 2; lane.position.set(198.5, 0.12, -168); g.add(lane);
+
+      // Sàn bê tông bóng + vạch an toàn
+      const floorTex = mwTex((c, w, h) => {
+        c.fillStyle = '#9aa3ad'; c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 1500; i++) { c.fillStyle = `rgba(${Math.random() < .5 ? '0,0,0' : '255,255,255'},${Math.random() * .06})`; c.fillRect(Math.random() * w, Math.random() * h, 2 + Math.random() * 7, 2 + Math.random() * 7); }
+        c.strokeStyle = 'rgba(0,0,0,.28)'; c.lineWidth = 2; c.strokeRect(0, 0, w, h);
+      }, 256, 256, W / 8, D / 8);
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ map: floorTex, roughness: 0.45, metalness: 0.15 }));
+      floor.rotation.x = -Math.PI / 2; floor.position.set(cx, 0.25, cz); floor.receiveShadow = true; g.add(floor);
+      const yel = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+      [-206, -186].forEach(z => { const l = new THREE.Mesh(new THREE.PlaneGeometry(W - 2, 0.3), yel); l.rotation.x = -Math.PI / 2; l.position.set(cx, 0.27, z); g.add(l); });
+      for (let c = 0; c < 17; c++) { const a = 64 + c * 18; [-5.6, 5.6].forEach(o => { const l = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 86), yel); l.rotation.x = -Math.PI / 2; l.position.set(a + o, 0.27, -257.5); g.add(l); }); }
+
+      // Tường bao
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.6 });
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x0a246a, roughness: 0.5 });
+      const lintelMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.4 });
+      const addWall = (x0, x1, z0, z1, h, y, mat) => {
+        box(x1 - x0, h, z1 - z0, mat || wallMat, (x0 + x1) / 2, y, (z0 + z1) / 2);
+      };
+      let prev = MW.x0;
+      MW_GATES.forEach((gx, i) => {
+        addWall(prev, gx - 6, MW.z1 - .5, MW.z1 + .5, H, H / 2); addWall(prev, gx - 6, MW.z1 - .6, MW.z1 + .6, 1.3, .65, baseMat);
+        addObstacle(prev, gx - 6, MW.z1 - 1, MW.z1 + 1, "Tường Kho Sa-tras");
+        addWall(gx - 6, gx + 6, MW.z1 - .5, MW.z1 + .5, H - 9.5, 9.5 + (H - 9.5) / 2, lintelMat);
+        box(.5, 9.5, 1.2, yel, gx - 6, 4.75, MW.z1); box(.5, 9.5, 1.2, yel, gx + 6, 4.75, MW.z1);
+        const lt = new THREE.Mesh(new THREE.SphereGeometry(.35, 10, 10), new THREE.MeshBasicMaterial({ color: i === 2 ? 0x22c55e : 0xf59e0b })); lt.position.set(gx + 7.2, 8, MW.z1 + .8); g.add(lt);
+        const n = new THREE.Mesh(new THREE.PlaneGeometry(8, 1.8), new THREE.MeshBasicMaterial({ map: mwTex((c, w, h) => { c.fillStyle = '#0f172a'; c.fillRect(0, 0, w, h); c.fillStyle = '#fff'; c.font = 'bold 54px Arial'; c.textAlign = 'center'; c.fillText('CỔNG ' + (i + 1) + (i === 2 ? ' • VÀO/RA' : ''), w / 2, 60); }, 512, 90, 1, 1) }));
+        n.position.set(gx, 10.5, MW.z1 + .62); g.add(n);
+        prev = gx + 6;
+      });
+      addWall(prev, MW.x1, MW.z1 - .5, MW.z1 + .5, H, H / 2); addWall(prev, MW.x1, MW.z1 - .6, MW.z1 + .6, 1.3, .65, baseMat);
+      addObstacle(prev, MW.x1, MW.z1 - 1, MW.z1 + 1, "Tường Kho Sa-tras");
+      addWall(MW.x0, MW.x1, MW.z0 - .5, MW.z0 + .5, H, H / 2); addObstacle(MW.x0, MW.x1, MW.z0 - 1, MW.z0 + 1, "Tường Bắc Kho");
+      addWall(MW.x0 - .5, MW.x0 + .5, MW.z0, MW.z1, H, H / 2); addObstacle(MW.x0 - 1, MW.x0 + 1, MW.z0, MW.z1, "Tường Tây Kho");
+      addWall(MW.x1 - .5, MW.x1 + .5, MW.z0, MW.z1, H, H / 2); addObstacle(MW.x1 - 1, MW.x1 + 1, MW.z0, MW.z1, "Tường Đông Kho");
+
+      // Biển hiệu mặt tiền
+      const fs = new THREE.Mesh(new THREE.PlaneGeometry(90, 7), new THREE.MeshBasicMaterial({ map: TextureGenerator.createWarehouseTexture('TỔNG KHO LOGISTICS SA-TRAS', 'TRUNG TÂM PHÂN PHỐI & BẢO QUẢN HÀNG HÓA • 45.560 m²', '#0a246a') }));
+      fs.position.set(cx, 14, MW.z1 + .65); g.add(fs);
+
+      // Mái (xuyên thấu, nhấn R để đổi), giàn thép, đèn LED
+      mwRoof = new THREE.Mesh(new THREE.BoxGeometry(W + 1, .6, D + 1), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, transparent: true, opacity: .3, depthWrite: false, roughness: .5 }));
+      mwRoof.position.set(cx, H + .3, cz); g.add(mwRoof);
+      const steel = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: .6, roughness: .5 });
+      mwInst(new THREE.BoxGeometry(.6, 1, 1), steel, 20, put => { for (let x = MW.x0 + 10; x < MW.x1; x += 20) put(x, H - .5, cz, 1, 1, D); }, g);
+      mwInst(new THREE.BoxGeometry(1, .5, .6), steel, 30, put => { for (let z = MW.z0 + 10; z < MW.z1; z += 20) put(cx, H - 1.2, z, W, 1, 1); }, g);
+      mwInst(new THREE.BoxGeometry(3, .15, 1.2), new THREE.MeshBasicMaterial({ color: 0xfff7d6 }), 200, put => { for (let x = MW.x0 + 10; x < MW.x1; x += 20) for (let z = MW.z0 + 10; z < MW.z1; z += 18) put(x, H - 1.6, z); }, g);
+
+      // ===== KHUNG KỆ 6 TẦNG: 17 dãy x 2 hàng, hàng hóa nằm TRONG kho =====
+      const cols = 17, cx0 = 52, pitch = 18, zA = -300, zB = -215, bays = 30, bl = (zB - zA) / bays;
+      const rowX = []; for (let c = 0; c < cols; c++) { rowX.push(cx0 + c * pitch + 1.3, cx0 + c * pitch + 4.7); }
+      mwInst(new THREE.BoxGeometry(.18, 15, .18), new THREE.MeshLambertMaterial({ color: 0x0284c7 }), 2400, put => {
+        rowX.forEach(x => { for (let j = 0; j <= bays; j++) [-1.2, 1.2].forEach(s => put(x + s, 7.5, zA + j * bl)); });
+      }, g);
+      mwInst(new THREE.BoxGeometry(.1, .16, bays * bl), new THREE.MeshLambertMaterial({ color: 0xea580c }), 500, put => {
+        rowX.forEach(x => { for (let k = 0; k < 6; k++) [-1.25, 1.25].forEach(s => put(x + s, 1.5 + k * 2.4, (zA + zB) / 2)); });
+      }, g);
+      const pal = [], cart = [], cols5 = [0xd97706, 0xb45309, 0x94a3b8, 0x2563eb, 0x16a34a, 0xe5e7eb].map(c => new THREE.Color(c));
+      rowX.forEach(x => { for (let k = 0; k < 6; k++) for (let j = 0; j < bays; j++) for (let s = 0; s < 2; s++) {
+        if (Math.random() < .08) continue;
+        const z = zA + j * bl + bl * (.25 + .5 * s), y = 1.5 + k * 2.4, h = .7 + Math.random() * .9;
+        pal.push([x, y + .16, z]); cart.push([x, y + .235 + h / 2, z, h, cols5[(Math.random() * 6) | 0]]);
+      } });
+      mwInst(new THREE.BoxGeometry(2.2, .15, 1.2), new THREE.MeshLambertMaterial({ color: 0xb45309 }), pal.length, put => pal.forEach(p => put(p[0], p[1], p[2])), g);
+      mwInst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xffffff }), cart.length, put => cart.forEach(p => put(p[0], p[1], p[2], 2.0, p[3], 1.05, p[4])), g);
+      for (let c = 0; c < cols; c++) {
+        const x = cx0 + c * pitch;
+        addObstacle(x - .3, x + 6.3, zA - 1, zB + 1, "Dãy Kệ Kho Sa-tras " + (c + 1));
+        const t = TextureGenerator.createRackingTypeTexture('DÃY KỆ ' + String(c + 1).padStart(2, '0'), 'LÔ ' + 'ABCDEFGHIJKLMNOPQ'[c] + ' • 6 TẦNG • 3.000 KG/TẦNG', c % 2 ? '#ea580c' : '#0284c7');
+        const s = new THREE.Mesh(new THREE.BoxGeometry(5, 1.5, .15), new THREE.MeshBasicMaterial({ map: t })); s.position.set(x + 3, 16.3, zB + .6); g.add(s);
+      }
+      // 4 hệ kệ đặc thù sát tường Bắc
+      buildSelectiveRacking(g, 70, -311.5, 0); buildDoubleDeepRacking(g, 100, -311.5, 0);
+      buildDriveInRacking(g, 130, -311.5, 0); buildPushBackRacking(g, 160, -311.5, 0);
+
+      // Hàng xếp sàn (floor stacks) khu Tây & Đông
+      const st = [];
+      const stackZone = (xa, xb) => { for (let x = xa; x <= xb; x += 2.6) for (let z = zA; z <= zB; z += 2.6) { if (Math.random() < .12) continue; st.push([x, z, 1 + ((Math.random() * 3) | 0), cols5[(Math.random() * 6) | 0]]); } };
+      stackZone(44, 49); stackZone(352, 376);
+      addObstacle(42, 51, zA - 1, zB + 1, "Hàng Xếp Sàn Tây"); addObstacle(350.5, 378, zA - 1, zB + 1, "Hàng Xếp Sàn Đông");
+      const levels = []; st.forEach(s => { for (let i = 0; i < s[2]; i++) levels.push([s[0], .33 + i * 1.3, s[1], s[3]]); });
+      mwInst(new THREE.BoxGeometry(2.3, .15, 2.3), new THREE.MeshLambertMaterial({ color: 0xb45309 }), levels.length, put => levels.forEach(l => put(l[0], l[1], l[2])), g);
+      mwInst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xffffff }), levels.length, put => levels.forEach(l => put(l[0], l[1] + .65, l[2], 2.1, 1.1, 2.1, l[3])), g);
+
+      // Thiết bị & nhân sự trong kho
+      [[70, -192, 1], [154, -197, -1], [262, -192, 1], [330, -200, 2]].forEach(f => { buildForklift(g, f[0], .25, f[1], f[2] * Math.PI / 2); });
+      buildHandPalletTruck(g, 120, .25, -195, .5); buildHandPalletTruck(g, 290, .25, -190, -.7);
+      [[85, -193], [185, -200], [240, -191], [300, -196]].forEach((p, i) => buildRealisticHumanWorker(g, p[0], .25, p[1], i, i % 2 ? 'technician' : 'worker'));
+      [[0, 4], [1, 7], [2, 10], [3, 13]].forEach(a => { // xe nâng tự chạy trong các lối kệ
+        const fg = new THREE.Group(); buildForklift(fg, 0, .25, 0, 0);
+        const ax = cx0 + (a[1] % 17) * pitch + 12 - (a[1] % 2) * 0; fg.position.set(ax, 0, -230 - a[0] * 12); g.add(fg);
+        mwForklifts.push({ g: fg, t: fg.position.z, min: -296, max: -222, dir: a[0] % 2 ? 1 : -1, sp: .1 + a[0] * .02 });
+      });
+      g.add(buildSignBoard(56, 7, -194, "KHU NHẬN / XUẤT HÀNG (INBOUND • OUTBOUND)", "LÀN XE TẢI TRONG KHO • TỐC ĐỘ TỐI ĐA 10 KM/H", 'warning'));
+      scene.add(g);
+
+      mwBadge = document.createElement('div');
+      mwBadge.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:60;padding:4px 12px;border-radius:999px;background:rgba(2,132,199,.9);color:#fff;font:700 11px Arial;display:none;pointer-events:none';
+      mwBadge.textContent = '🏭 ĐANG TRONG KHO SA-TRAS • [R] đổi mái • [T] ra cổng kho';
+      document.body.appendChild(mwBadge);
+      window.addEventListener('keydown', e => {
+        if (/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return;
+        const k = e.key.toLowerCase();
+        if (k === 'r' && mwRoof) { mwRoofSolid = !mwRoofSolid; [mwRoof].concat(mwRoofs).forEach(r => { r.material.opacity = mwRoofSolid ? 1 : .3; r.material.depthWrite = mwRoofSolid; r.material.needsUpdate = true; }); showHUDToast(mwRoofSolid ? 'Mái kho: ĐẶC' : 'Mái kho: TRONG SUỐT'); }
+        if (MW_TELE[k] && truckMesh) { const q = MW_TELE[k]; truckMesh.position.set(q[0], truckMesh.position.y, q[1]); truckMesh.rotation.y = q[2]; gameState.truckRot = q[2]; gameState.speed = 0; showHUDToast('Đã đến: ' + q[3] + ' — lái vào cổng'); }
+        if (k === 't' && truckMesh) { truckMesh.position.set(208, truckMesh.position.y, -150); truckMesh.rotation.y = 0; gameState.truckRot = 0; gameState.speed = 0; showHUDToast('Đã đến cổng 3 Tổng Kho Sa-tras — chạy thẳng vào trong (W)'); }
+      });
+    }
+
+    function updateMegaWarehouse() {
+      if (!truckMesh) return;
+      const tx = truckMesh.position.x, tz = truckMesh.position.z, sun = window.sunLightRef;
+      if (sun) { sun.target.position.set(tx, 0, tz); sun.position.set(tx + 120, 150, tz + 80); }
+      mwForklifts.forEach(f => {
+        f.t += f.dir * f.sp; if (f.t > f.max) { f.t = f.max; f.dir = -1; } else if (f.t < f.min) { f.t = f.min; f.dir = 1; }
+        f.g.position.z = f.t; f.g.rotation.y = f.dir > 0 ? Math.PI : 0;
+      });
+      const ap = mwActor(), cs = STATION_LOCATIONS[gameState.step - 1], inSt = cs && mwInStationZone(cs, ap.x, ap.z);
+      if (inSt && mwHintStep !== gameState.step) { mwHintStep = gameState.step; showHUDToast('📍 ĐÃ VÀO KHU VỰC NHIỆM VỤ: ' + cs.name + ' — nhấn [E] để thao tác (không cần vào ô xanh).'); }
+      if (!inSt) mwHintStep = 0;
+      const zn = mwZoneAt(ap.x, ap.z);
+      if (zn !== mwCurZone) {
+        mwCurZone = zn;
+        if (mwBadge) { mwBadge.style.display = zn ? 'block' : 'none'; if (zn) mwBadge.textContent = '🏭 ' + zn.t + (zn.temp !== undefined ? ' • NHIỆT ĐỘ ' + zn.temp + '°C' : '') + ' • [R] mái • [T,7,8,9] đi nhanh'; }
+        const cold = zn && zn.temp !== undefined && zn.temp < 5;
+        if (scene.fog) { scene.fog.color.setHex(cold ? 0xdbeafe : 0x7dd3fc); scene.fog.density = cold ? 0.008 : 0.0022; }
+      }
+      mwParcels.forEach(p => { p.m.position.x += .12; if (p.m.position.x > p.x1) p.m.position.x = p.x0; });
+      if (mwLedMat) mwLedMat.color.lerpColors(new THREE.Color(0x22c55e), new THREE.Color(0xf59e0b), (Math.sin(Date.now() * .003) + 1) / 2);
+    }
+
+    /* ===== 3 KHU MỚI: KHO LẠNH 21.600 m², TRẠM SẠC XE NÂNG 6.720 m², CHI CỤC HẢI QUAN 20.400 m² ===== */
+    const MW_ZONES = [], mwRoofs = [];
+    let mwLedMat = null, mwCurZone = null;
+    const MW_TELE = { '7': [463, -160, 0, 'Kho Lạnh Reefer (21.600 m²)'], '8': [470, -165, Math.PI, 'Trạm Sạc Xe Nâng'], '9': [115, 190, Math.PI, 'Chi Cục Hải Quan'] };
+
+    function mwLabel(text, w, h, px, bg, fg) {
+      return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: mwTex((c, cw, ch) => { c.fillStyle = bg || '#0f172a'; c.fillRect(0, 0, cw, ch); c.fillStyle = fg || '#fff'; c.font = 'bold ' + px + 'px Arial'; c.textAlign = 'center'; c.fillText(text, cw / 2, ch / 2 + px / 3); }, 512, Math.round(512 * h / w), 1, 1) }));
+    }
+
+    function mwShell(c) {
+      const g = new THREE.Group(), W = c.x1 - c.x0, D = c.z1 - c.z0, H = c.H, cx = (c.x0 + c.x1) / 2, cz = (c.z0 + c.z1) / 2;
+      const S = c.gate === 'S', fz = S ? c.z1 : c.z0, bz = S ? c.z0 : c.z1, out = S ? 1 : -1;
+      const bx = (w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); g.add(o); return o; };
+      const ft = mwTex((k, w, h) => { k.fillStyle = '#9aa3ad'; k.fillRect(0, 0, w, h); for (let i = 0; i < 1200; i++) { k.fillStyle = `rgba(${Math.random() < .5 ? '0,0,0' : '255,255,255'},${Math.random() * .06})`; k.fillRect(Math.random() * w, Math.random() * h, 2 + Math.random() * 7, 2 + Math.random() * 7); } k.strokeStyle = 'rgba(0,0,0,.28)'; k.strokeRect(0, 0, w, h); }, 256, 256, W / 8, D / 8);
+      const fl = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ map: ft, color: c.floor || 0xffffff, roughness: .45, metalness: .15 }));
+      fl.rotation.x = -Math.PI / 2; fl.position.set(cx, .25, cz); fl.receiveShadow = true; g.add(fl);
+      const wm = new THREE.MeshStandardMaterial({ color: c.wall || 0xe5e7eb, roughness: .6 }), bm = new THREE.MeshStandardMaterial({ color: c.base || 0x0a246a }), lm = new THREE.MeshStandardMaterial({ color: c.lintel || 0x0284c7 }), ym = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+      const wall = (xa, xb, za, zb, h, y, m, nm) => { bx(xb - xa, h, zb - za, m || wm, (xa + xb) / 2, y, (za + zb) / 2); if (nm) addObstacle(xa - .3, xb + .3, za - .3, zb + .3, nm); };
+      let prev = c.x0;
+      c.gates.forEach((gx, i) => {
+        wall(prev, gx - 6, fz - .5, fz + .5, H, H / 2, wm, c.name); wall(prev, gx - 6, fz - .6, fz + .6, 1.3, .65, bm);
+        wall(gx - 6, gx + 6, fz - .5, fz + .5, H - 9.5, 9.5 + (H - 9.5) / 2, lm);
+        bx(.5, 9.5, 1.2, ym, gx - 6, 4.75, fz); bx(.5, 9.5, 1.2, ym, gx + 6, 4.75, fz);
+        const n = mwLabel('CỔNG ' + (i + 1), 6, 1.4, 54); n.position.set(gx, 10.4, fz + out * .62); n.rotation.y = out > 0 ? 0 : Math.PI; g.add(n); prev = gx + 6;
+      });
+      wall(prev = c.gates[c.gates.length - 1] + 6, c.x1, fz - .5, fz + .5, H, H / 2, wm, c.name); wall(prev, c.x1, fz - .6, fz + .6, 1.3, .65, bm);
+      wall(c.x0, c.x1, bz - .5, bz + .5, H, H / 2, wm, c.name);
+      wall(c.x0 - .5, c.x0 + .5, c.z0, c.z1, H, H / 2, wm, c.name); wall(c.x1 - .5, c.x1 + .5, c.z0, c.z1, H, H / 2, wm, c.name);
+      const sg = new THREE.Mesh(new THREE.PlaneGeometry(Math.min(W * .6, 80), 6.5), new THREE.MeshBasicMaterial({ map: c.tex })); sg.position.set(cx, H - 3.2, fz + out * .65); sg.rotation.y = out > 0 ? 0 : Math.PI; g.add(sg);
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(W + 1, .6, D + 1), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, transparent: true, opacity: .3, depthWrite: false }));
+      roof.position.set(cx, H + .3, cz); g.add(roof); mwRoofs.push(roof);
+      mwInst(new THREE.BoxGeometry(3, .15, 1.2), new THREE.MeshBasicMaterial({ color: 0xfff7d6 }), 200, put => { for (let x = c.x0 + 10; x < c.x1; x += 20) for (let z = c.z0 + 10; z < c.z1; z += 18) put(x, H - 1.2, z); }, g);
+      scene.add(g); MW_ZONES.push({ x0: c.x0, x1: c.x1, z0: c.z0, z1: c.z1, t: c.zone }); return g;
+    }
+
+    function mwRackField(g, xs, zA, zB, bays, pal5) {
+      const bl = (zB - zA) / bays, rows = []; xs.forEach(x => rows.push(x + 1.3, x + 4.7));
+      mwInst(new THREE.BoxGeometry(.18, 15, .18), new THREE.MeshLambertMaterial({ color: 0x0284c7 }), 4000, put => rows.forEach(x => { for (let j = 0; j <= bays; j++) [-1.2, 1.2].forEach(s => put(x + s, 7.5, zA + j * bl)); }), g);
+      mwInst(new THREE.BoxGeometry(.1, .16, bays * bl), new THREE.MeshLambertMaterial({ color: 0xea580c }), 400, put => rows.forEach(x => { for (let k = 0; k < 6; k++) [-1.25, 1.25].forEach(s => put(x + s, 1.5 + k * 2.4, (zA + zB) / 2)); }), g);
+      const P = [], C = []; rows.forEach(x => { for (let k = 0; k < 6; k++) for (let j = 0; j < bays; j++) for (let s = 0; s < 2; s++) { if (Math.random() < .08) continue; const z = zA + j * bl + bl * (.25 + .5 * s), y = 1.5 + k * 2.4, h = .7 + Math.random() * .9; P.push([x, y + .16, z]); C.push([x, y + .235 + h / 2, z, h, pal5[(Math.random() * pal5.length) | 0]]); } });
+      mwInst(new THREE.BoxGeometry(2.2, .15, 1.2), new THREE.MeshLambertMaterial({ color: 0xb45309 }), P.length, put => P.forEach(p => put(p[0], p[1], p[2])), g);
+      mwInst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xffffff }), C.length, put => C.forEach(p => put(p[0], p[1], p[2], 2, p[3], 1.05, p[4])), g);
+      xs.forEach(x => addObstacle(x - .3, x + 6.3, zA - 1, zB + 1, 'Dãy Kệ'));
+    }
+
+    function buildColdStorage() {
+      const T = [['CẤP ĐÔNG SÂU -25°C', -25], ['TRỮ ĐÔNG -18°C', -18], ['KHO MÁT 0~4°C', 2], ['KHO RAU QUẢ +12°C', 12]];
+      const g = mwShell({ x0: 400, x1: 580, z0: -310, z1: -190, H: 16, gate: 'S', gates: [418, 463, 508, 553], name: 'Tường Kho Lạnh', wall: 0xf1f5f9, base: 0x0369a1, lintel: 0x0f172a, zone: 'KHO LẠNH REEFER',
+        tex: TextureGenerator.createWarehouseTexture('KHO LẠNH REEFER LOGISTICS', 'CẤP ĐÔNG -25°C • TRỮ ĐÔNG -18°C • KHO MÁT • 21.600 m²', '#0f172a') });
+      const pm = new THREE.MeshStandardMaterial({ color: 0xdbeafe, roughness: .4 }), frost = [0xe0f2fe, 0xbae6fd, 0xf1f5f9, 0x93c5fd, 0xfde68a].map(c => new THREE.Color(c));
+      const pvc = new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: .35, side: THREE.DoubleSide });
+      T.forEach((t, i) => {
+        const x0 = 400 + 45 * i, dx = x0 + 18, cold = t[1] < 5, col = cold ? 0xcfe8f5 : 0xd9f2d0;
+        const f = new THREE.Mesh(new THREE.PlaneGeometry(45, 98), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .45 })); f.rotation.x = -Math.PI / 2; f.position.set(x0 + 22.5, .28, -261); g.add(f);
+        const seg = (xa, xb) => { const m = new THREE.Mesh(new THREE.BoxGeometry(xb - xa, 16, .6), pm); m.position.set((xa + xb) / 2, 8, -212); g.add(m); addObstacle(xa - .3, xb + .3, -212.6, -211.4, 'Vách Buồng Lạnh'); };
+        seg(x0, dx - 6); seg(dx + 6, x0 + 45);
+        if (i) { const m = new THREE.Mesh(new THREE.BoxGeometry(.6, 16, 98), pm); m.position.set(x0, 8, -261); g.add(m); addObstacle(x0 - .6, x0 + .6, -310, -212, 'Vách Buồng Lạnh'); }
+        const cur = new THREE.Mesh(new THREE.PlaneGeometry(12, 7), pvc); cur.position.set(dx, 3.6, -212); g.add(cur);
+        const lb = mwLabel(t[0] + '  ' + t[1] + '°C', 12, 1.8, 40, t[1] < 5 ? '#075985' : '#166534'); lb.position.set(dx, 8.6, -211.6); g.add(lb);
+        mwRackField(g, [x0 + 6, x0 + 24], -302, -218, 30, cold ? frost : [0xd97706, 0x16a34a, 0xdc2626, 0xfacc15].map(c => new THREE.Color(c)));
+        MW_ZONES.unshift({ x0: x0, x1: x0 + 45, z0: -310, z1: -212, t: 'BUỒNG ' + t[0], temp: t[1] });
+        for (let k = 0; k < 6; k++) { // dàn nóng trên mái, quạt quay
+          const fx = x0 + 6 + k * 6.6; const b = new THREE.Mesh(new THREE.BoxGeometry(4, 1.3, 4), new THREE.MeshLambertMaterial({ color: 0x94a3b8 })); b.position.set(fx, 17.4, -261); g.add(b);
+          const bl = new THREE.Mesh(new THREE.BoxGeometry(3.4, .1, .5), new THREE.MeshBasicMaterial({ color: 0x0f172a })); bl.position.set(fx, 18.2, -261); g.add(bl); spinningFansList.push(bl);
+        }
+      });
+    }
+
+    function buildChargingStation() {
+      const g = mwShell({ x0: 400, x1: 512, z0: -150, z1: -90, H: 10, gate: 'N', gates: [430, 470], name: 'Tường Trạm Sạc', zone: 'TRẠM SẠC & THAY BÌNH XE NÂNG', base: 0xca8a04, lintel: 0x334155,
+        tex: mwTex((c, w, h) => { c.fillStyle = '#0a246a'; c.fillRect(0, 0, w, h); c.fillStyle = '#facc15'; c.font = 'bold 46px Arial'; c.textAlign = 'center'; c.fillText('TRẠM SẠC & BẢO DƯỠNG XE NÂNG', w / 2, 80); c.fillStyle = '#fff'; c.font = '28px Arial'; c.fillText('48V/80V • 48 VỊ TRÍ SẠC • PHÒNG THAY BÌNH • PCCC', w / 2, 140); }, 1024, 180, 1, 1) });
+      const hz = new THREE.Mesh(new THREE.PlaneGeometry(108, 8), new THREE.MeshLambertMaterial({ map: TextureGenerator.createHatchedStripeTexture() })); hz.rotation.x = -Math.PI / 2; hz.position.set(456, .3, -144); g.add(hz);
+      mwLedMat = new THREE.MeshBasicMaterial({ color: 0x22c55e });
+      const rowsZ = [-134, -122, -110, -98], xsC = []; for (let i = 0; i < 12; i++) xsC.push(410 + i * 7.6);
+      mwInst(new THREE.BoxGeometry(1.4, 2.4, .9), new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: .6 }), 60, put => rowsZ.forEach(z => xsC.forEach(x => put(x, 1.45, z))), g);
+      mwInst(new THREE.SphereGeometry(.14, 8, 8), mwLedMat, 60, put => rowsZ.forEach(z => xsC.forEach(x => put(x, 2.3, z + .5))), g);
+      mwInst(new THREE.CylinderGeometry(.14, .14, .75, 10), new THREE.MeshLambertMaterial({ color: 0xdc2626 }), 30, put => { for (let x = 404; x < 510; x += 8) { put(x, .65, -148.5); put(x, .65, -91.5); } }, g);
+      rowsZ.forEach(z => addObstacle(407, 497, z - 1, z + 1, 'Dãy Trụ Sạc'));
+      [-134, -122].forEach(z => xsC.forEach((x, i) => { if (i % 2 === 0) buildForklift(g, x + 2, .25, z + 3.5, Math.PI); }));
+      const bat = []; for (let x = 501; x <= 509; x += 4) for (let z = -146; z <= -94; z += 3) for (let l = 0; l < 2; l++) bat.push([x, .9 + l * 1.7, z]);
+      mwInst(new THREE.BoxGeometry(2.4, 1.5, 2.2), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: .5 }), bat.length, put => bat.forEach(b => put(b[0], b[1], b[2])), g);
+      addObstacle(499, 511, -148, -92, 'Kệ Bình Ắc Quy Dự Phòng');
+      for (let i = 0; i < 3; i++) buildHandPalletTruck(g, 420 + i * 8, .25, -141, i);
+      buildRealisticHumanWorker(g, 440, .25, -142, 0, 'technician'); buildRealisticHumanWorker(g, 484, .25, -141, Math.PI, 'worker');
+    }
+
+    function buildCustomsCompound() {
+      const g = mwShell({ x0: 30, x1: 200, z0: 210, z1: 330, H: 14, gate: 'N', gates: [70, 115, 160], name: 'Tường Chi Cục Hải Quan', zone: 'CHI CỤC HẢI QUAN CÁT LÁI', base: 0x991b1b, lintel: 0x1e3a8a, wall: 0xf1f5f9, tex: TextureGenerator.createCustomsFacadeTexture() });
+      const am = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: .35, metalness: .5 });
+      [70, 115, 160].forEach((gx, i) => {
+        [-8, 8].forEach(o => { const p = new THREE.Mesh(new THREE.BoxGeometry(1.6, 8, 2.5), am); p.position.set(gx + o, 4, 222); g.add(p); addObstacle(gx + o - .8, gx + o + .8, 220.7, 223.3, 'Máy Soi X-Ray'); });
+        const t = new THREE.Mesh(new THREE.BoxGeometry(17.6, 1.8, 2.5), am); t.position.set(gx, 8.6, 222); g.add(t);
+        const l = mwLabel('MÁY SOI X-RAY ' + (i + 1), 10, 1.4, 44, '#92400e'); l.position.set(gx, 10.2, 220.7); l.rotation.y = Math.PI; g.add(l);
+      });
+      const cc = ['#059669', '#d97706', '#dc2626', '#4f46e5', '#0284c7', '#0891b2'].map(c => new THREE.Color(c)), cont = [];
+      [[34, 63], [77, 108], [122, 153], [167, 196]].forEach(b => { for (let x = b[0] + 1.6; x < b[1]; x += 3.3) for (let r = 0; r < 4; r++) for (let l = 0; l < 2; l++) cont.push([x, 1.6 + l * 2.68, 253 + r * 9.5, cc[(Math.random() * 6) | 0]]); addObstacle(b[0], b[1], 247, 290, 'Bãi Kiểm Hóa Container'); });
+      mwInst(new THREE.BoxGeometry(2.45, 2.65, 8.5), new THREE.MeshLambertMaterial({ color: 0xffffff }), cont.length, put => cont.forEach(c => put(c[0], c[1], c[2], 1, 1, 1, c[3])), g);
+      const lab = mwLabel('KHU KIỂM HÓA CONTAINER (SOI CHIẾU • MỞ KIỂM THỰC TẾ)', 60, 3, 22, '#7f1d1d'); lab.position.set(115, 12, 245.5); lab.rotation.y = Math.PI; g.add(lab);
+      const of = new THREE.Mesh(new THREE.BoxGeometry(158, 8, 14), new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: .3, metalness: .5 })); of.position.set(115, 4.25, 322); g.add(of); addObstacle(36, 194, 315, 329, 'Tòa Nhà Điều Hành Chi Cục');
+      const gl = new THREE.Mesh(new THREE.PlaneGeometry(150, 3), new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: .9, roughness: .1 })); gl.position.set(115, 5.5, 314.9); gl.rotation.y = Math.PI; g.add(gl);
+      const sz = []; for (let x = 170; x <= 196; x += 2.6) for (let z = 296; z <= 311; z += 2.6) sz.push([x, z, 1 + ((Math.random() * 2) | 0)]);
+      const sl = []; sz.forEach(s => { for (let i = 0; i < s[2]; i++) sl.push([s[0], .75 + i * 1.3, s[1]]); });
+      mwInst(new THREE.BoxGeometry(2.1, 1.2, 2.1), new THREE.MeshLambertMaterial({ color: 0x7c2d12 }), sl.length, put => sl.forEach(s => put(s[0], s[1], s[2])), g); addObstacle(168, 198, 295, 313, 'Kho Tang Vật Tạm Giữ');
+      const kt = mwLabel('KHO TANG VẬT TẠM GIỮ', 20, 2, 36, '#450a0a'); kt.position.set(183, 6, 293.8); kt.rotation.y = Math.PI; g.add(kt);
+      buildCustomsPatrolCar(g, 40, .25, 232); buildCustomsPatrolCar(g, 190, .25, 232);
+      [[58, 232], [92, 236], [100, 228], [138, 234], [172, 228], [128, 238]].forEach((p, i) => buildRealisticHumanWorker(g, p[0], .25, p[1], i, 'customs'));
+    }
+
+    function buildMegaExtras() {
+      const road = new THREE.Mesh(new THREE.PlaneGeometry(223, 22), new THREE.MeshLambertMaterial({ map: TextureGenerator.createAsphaltTexture() })); road.rotation.x = -Math.PI / 2; road.position.set(491.5, .1, -168); road.receiveShadow = true; scene.add(road);
+      const r2 = new THREE.Mesh(new THREE.PlaneGeometry(183, 22), new THREE.MeshLambertMaterial({ map: TextureGenerator.createAsphaltTexture() })); r2.rotation.x = -Math.PI / 2; r2.position.set(108.5, .1, 190); r2.receiveShadow = true; scene.add(r2);
+      MW_ZONES.push({ x0: 40, x1: 380, z0: -314, z1: -180, t: 'TỔNG KHO SA-TRAS' });
+      buildColdStorage(); buildChargingStation(); buildCustomsCompound();
+      buildOrderHalls(); buildPortComplex(); buildVillage(); mwInitWalkUI();
+    }
+
+    function mwZoneAt(x, z) { return MW_ZONES.find(a => x > a.x0 && x < a.x1 && z > a.z0 && z < a.z1); }
+
+    /* ===== KHU XỬ LÝ ĐƠN HÀNG + ĐIỀU ĐỘ, CẢNG (CỔNG A-D, TÀU), KHU DÂN CƯ ===== */
+    const mwParcels = [];
+    const MW_ALT = { Digit1: [345, -64, Math.PI, 'Khu Order Picking'], Digit2: [455, -64, Math.PI, 'Khu Đóng Gói'], Digit3: [555, -64, Math.PI, 'Khu Điều Độ & Quản Lý Kho'],
+      Digit4: [320, 318, Math.PI, 'Cổng Cảng A-D'], Digit5: [300, 585, Math.PI, 'Bến Tàu Cát Lái'], Digit6: [0, 250, Math.PI, 'Khu Dân Cư'] };
+    const MW_CARD = [0xd6b98c, 0xc9a66b, 0xe7d3a8, 0xb98f5a, 0xf1e4c3].map(c => new THREE.Color(c));
+    const MW_CONT = [0xdc2626, 0x2563eb, 0x059669, 0xd97706, 0x7c3aed, 0x0891b2, 0xe5e7eb].map(c => new THREE.Color(c));
+
+    function mwBanner(t, s, bg) { return mwTex((c, w, h) => { c.fillStyle = bg; c.fillRect(0, 0, w, h); c.fillStyle = '#fff'; c.textAlign = 'center'; c.font = 'bold 54px Arial'; c.fillText(t, w / 2, 62); c.font = '28px Arial'; c.fillStyle = '#facc15'; c.fillText(s, w / 2, 104); }, 1024, 120, 1, 1); }
+    function mwRoad(x0, x1, z0, z1) { const m = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, z1 - z0), new THREE.MeshLambertMaterial({ map: TextureGenerator.createAsphaltTexture() })); m.rotation.x = -Math.PI / 2; m.position.set((x0 + x1) / 2, .1, (z0 + z1) / 2); m.receiveShadow = true; scene.add(m); }
+    function mwBelt(g, x0, x1, z, parcels) {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(x1 - x0, .5, 1.3), new THREE.MeshLambertMaterial({ color: 0x1f2937 })); b.position.set((x0 + x1) / 2, 1, z); g.add(b);
+      for (let i = 0; i < parcels; i++) { const p = new THREE.Mesh(new THREE.BoxGeometry(.9, .6, .7), new THREE.MeshLambertMaterial({ color: MW_CARD[i % 5] })); p.position.set(x0 + (x1 - x0) * i / parcels, 1.55, z); g.add(p); mwParcels.push({ m: p, x0: x0, x1: x1 }); }
+    }
+
+    function buildOrderHalls() {
+      mwRoad(289, 311, -168, -49); mwRoad(300, 640, -71, -49);
+      // ---- KHU ORDER PICKING 100x65 ----
+      let g = mwShell({ x0: 320, x1: 420, z0: -45, z1: 20, H: 9, gate: 'N', gates: [345, 395], name: 'Tường Khu Order Picking', zone: 'KHU ORDER PICKING (PICK-TO-LIGHT)', tex: mwBanner('KHU ORDER PICKING', 'PICK-TO-LIGHT • CHIA CHỌN ĐƠN HÀNG • 6.500 m²', '#0f766e') });
+      const rz = [-28, -20, -12, -4, 4, 12];
+      mwInst(new THREE.BoxGeometry(80, .08, 1.4), new THREE.MeshLambertMaterial({ color: 0xea580c }), 40, p => rz.forEach(z => { for (let k = 0; k < 4; k++) p(370, .5 + k * 1.2, z); }), g);
+      mwInst(new THREE.BoxGeometry(.1, 4.8, .1), new THREE.MeshLambertMaterial({ color: 0x0284c7 }), 400, p => rz.forEach(z => { for (let x = 330; x <= 410; x += 4) [-.65, .65].forEach(o => p(x, 2.4, z + o)); }), g);
+      mwInst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xffffff }), 1100, p => rz.forEach(z => { for (let k = 0; k < 4; k++) for (let x = 331; x < 410; x += 2) if (Math.random() > .1) p(x, .62 + k * 1.2 + .3, z, 1.5, .6 + Math.random() * .4, 1, MW_CARD[(Math.random() * 5) | 0]); }), g);
+      mwInst(new THREE.BoxGeometry(.3, .12, .1), mwLedMat || (mwLedMat = new THREE.MeshBasicMaterial({ color: 0x22c55e })), 600, p => rz.forEach(z => { for (let k = 0; k < 4; k++) for (let x = 332; x <= 408; x += 4) p(x, .38 + k * 1.2, z - .72); }), g);
+      rz.forEach(z => addObstacle(329, 411, z - 1, z + 1, 'Giá Kệ Order Picking'));
+      mwBelt(g, 335, 405, 16.5, 16); addObstacle(334, 406, 15.5, 17.5, 'Băng Chuyền Phân Loại');
+      [[340, -2], [372, 8], [400, -16], [352, 8]].forEach((p, i) => buildRealisticHumanWorker(g, p[0], .25, p[1] + 2, i, 'worker'));
+      // ---- KHU ĐÓNG GÓI 90x70 ----
+      g = mwShell({ x0: 430, x1: 520, z0: -45, z1: 25, H: 9, gate: 'N', gates: [455, 495], name: 'Tường Khu Đóng Gói', zone: 'KHU ĐÓNG GÓI & QUẤN MÀNG', tex: mwBanner('KHU ĐÓNG GÓI', 'QUẤN MÀNG PE • DÁN NHÃN • XUẤT HÀNG • 6.300 m²', '#9a3412') });
+      const tb = []; [-20, -8, 4, 16].forEach(z => { for (let x = 442; x <= 508; x += 7) tb.push([x, z]); });
+      mwInst(new THREE.BoxGeometry(3, .9, 1.4), new THREE.MeshLambertMaterial({ color: 0x64748b }), tb.length, p => tb.forEach(t => p(t[0], .7, t[1])), g);
+      mwInst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xffffff }), tb.length, p => tb.forEach(t => p(t[0], 1.45, t[1], 1.2, .6, .9, MW_CARD[(Math.random() * 5) | 0])), g);
+      mwBelt(g, 438, 512, -14, 14); mwBelt(g, 438, 512, 10, 14);
+      addObstacle(438, 512, -21, -7, 'Bàn Đóng Gói'); addObstacle(438, 512, 3, 17, 'Bàn Đóng Gói');
+      [442, 458, 474, 490].forEach(x => { const t = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, .2, 16), new THREE.MeshLambertMaterial({ color: 0xfacc15 })); t.position.set(x, .4, -29); g.add(t); const m = new THREE.Mesh(new THREE.BoxGeometry(.4, 3.6, .4), new THREE.MeshLambertMaterial({ color: 0x1e293b })); m.position.set(x + 1.9, 2, -29); g.add(m); });
+      const pl = []; for (let x = 506; x <= 518; x += 2.6) for (let z = -28; z <= 22; z += 2.6) pl.push([x, z]);
+      mwInst(new THREE.BoxGeometry(2.1, 1.6, 2.1), new THREE.MeshLambertMaterial({ color: 0xffffff }), pl.length, p => pl.forEach(a => p(a[0], 1.05, a[1], 1, 1, 1, MW_CARD[(Math.random() * 5) | 0])), g); addObstacle(504.5, 519.5, -30, 24, 'Pallet Chờ Xuất');
+      [[450, -26], [466, -2], [482, 8], [498, -2], [470, 20]].forEach((p, i) => buildRealisticHumanWorker(g, p[0], .25, p[1], i, 'worker'));
+      // ---- KHU ĐIỀU ĐỘ & QUẢN LÝ KHO (WMS) ----
+      g = mwShell({ x0: 530, x1: 620, z0: -45, z1: 25, H: 9, gate: 'N', gates: [555, 595], name: 'Tường Khu Điều Độ', zone: 'KHU ĐIỀU ĐỘ & QUẢN LÝ KHO (WMS/TMS)', tex: mwBanner('ĐIỀU ĐỘ & QUẢN LÝ KHO', 'WMS • TMS • ĐIỀU PHỐI XE • KIỂM SOÁT TỒN KHO', '#1e3a8a') });
+      const cr = new THREE.Mesh(new THREE.BoxGeometry(70, 5, 16), new THREE.MeshStandardMaterial({ color: 0x7dd3fc, transparent: true, opacity: .35, metalness: .6, roughness: .1 })); cr.position.set(575, 2.8, 14); g.add(cr); addObstacle(540, 610, 6, 22, 'Phòng Điều Hành Trung Tâm');
+      const ds = []; for (let x = 543; x <= 607; x += 4) [10, 16, 21].forEach(z => ds.push([x, z]));
+      mwInst(new THREE.BoxGeometry(2.4, .9, 1.2), new THREE.MeshLambertMaterial({ color: 0xe2e8f0 }), ds.length, p => ds.forEach(d => p(d[0], .7, d[1])), g);
+      mwInst(new THREE.BoxGeometry(1.2, .8, .1), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }), ds.length, p => ds.forEach(d => p(d[0], 1.6, d[1])), g);
+      const db = new THREE.Mesh(new THREE.PlaneGeometry(44, 7), new THREE.MeshBasicMaterial({ map: mwTex((c, w, h) => { c.fillStyle = '#020617'; c.fillRect(0, 0, w, h); c.fillStyle = '#38bdf8'; c.font = 'bold 30px Arial'; c.fillText('BẢNG ĐIỀU ĐỘ XE • WMS DASHBOARD', 20, 40); c.font = '24px monospace'; const R = [['51C-123.45', 'CỔNG 1 ', 'ĐANG BỐC HÀNG', '#22c55e'], ['50H-678.90', 'CỔNG 2 ', 'CHỜ SOI X-RAY', '#f59e0b'], ['60C-246.81', 'CỔNG 3 ', 'ĐÃ XUẤT KHO', '#38bdf8'], ['29H-135.79', 'CỔNG 4 ', 'CHỜ VÀO BÃI', '#f59e0b'], ['51D-864.20', 'CỔNG 5 ', 'ĐANG DỠ HÀNG', '#22c55e']]; R.forEach((r, i) => { c.fillStyle = r[3]; c.fillText(r[0] + '  ' + r[1] + ' ' + r[2], 20, 90 + i * 40); }); c.fillStyle = '#e2e8f0'; c.fillText('TỒN KHO: 12.480 PALLET | LẤP ĐẦY 86%', 20, 320); }, 1024, 340, 1, 1) })); db.position.set(575, 5.5, 5.8); db.rotation.y = Math.PI; g.add(db);
+      const tw = new THREE.Mesh(new THREE.BoxGeometry(8, 30, 8), new THREE.MeshStandardMaterial({ color: 0xe2e8f0 })); tw.position.set(575, 15, 14); g.add(tw);
+      const tg = new THREE.Mesh(new THREE.BoxGeometry(12, 5, 12), new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: .5, metalness: .8 })); tg.position.set(575, 32.5, 14); g.add(tg);
+      const an = new THREE.Mesh(new THREE.CylinderGeometry(.12, .12, 8, 6), new THREE.MeshBasicMaterial({ color: 0xdc2626 })); an.position.set(575, 38, 14); g.add(an); addObstacle(570.5, 579.5, 9.5, 18.5, 'Tháp Điều Độ');
+      const sl = new THREE.MeshBasicMaterial({ color: 0xfacc15 }); mwInst(new THREE.BoxGeometry(.2, .03, 9), sl, 20, p => { for (let x = 535; x <= 615; x += 6) p(x, .3, -22); }, g);
+      buildForklift(g, 545, .25, -10, 0); buildForklift(g, 610, .25, -6, Math.PI);
+      [[560, -5], [590, -2], [600, 0]].forEach((p, i) => buildRealisticHumanWorker(g, p[0], .25, p[1], i, 'technician'));
+    }
+
+    function buildPortComplex() {
+      mwRoad(200, 340, 179, 201); mwRoad(260, 420, 190, 640);
+      const conc = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: .8 }), navy = new THREE.MeshStandardMaterial({ color: 0x0a246a }), glass = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, transparent: true, opacity: .5, metalness: .7 });
+      const g = new THREE.Group(), bx = (w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); g.add(o); return o; };
+      // ---- CỔNG CẢNG A-D ----
+      bx(166, 4, 16, navy, 340, 12, 350);
+      ['A', 'B', 'C', 'D'].forEach((L, i) => {
+        const lx = 280 + i * 40, s = mwLabel('CỔNG ' + L, 14, 3, 80, '#0a246a'); s.position.set(lx, 12, 341.9); s.rotation.y = Math.PI; g.add(s);
+        const s2 = mwLabel('CỔNG ' + L, 14, 3, 80, '#0a246a'); s2.position.set(lx, 12, 358.1); g.add(s2);
+        MW_ZONES.push({ x0: lx - 8, x1: lx + 8, z0: 340, z1: 360, t: 'CỔNG CẢNG CÁT LÁI - CỔNG ' + L });
+        const lt = new THREE.Mesh(new THREE.SphereGeometry(.5, 10, 10), new THREE.MeshBasicMaterial({ color: i === 3 ? 0xdc2626 : 0x22c55e })); lt.position.set(lx, 9.2, 350); g.add(lt);
+      });
+      [[258, 272], [288, 312], [328, 352], [368, 392], [408, 422]].forEach(r => { const mx = (r[0] + r[1]) / 2, w = r[1] - r[0];
+        bx(w, .6, 20, conc, mx, .4, 350); bx(Math.min(w, 6), 3.4, 8, glass, mx, 2.5, 350); bx(1.2, 10, 1.2, navy, mx, 5.5, 346); bx(1.2, 10, 1.2, navy, mx, 5.5, 354);
+        addObstacle(r[0], r[1], 340, 360, 'Đảo Cổng Cảng'); });
+      // ---- BÃI CONTAINER 2 BÊN ----
+      const cont = []; [[206, 252], [428, 474]].forEach(b => { for (let x = b[0] + 1.6; x < b[1]; x += 3.3) for (let z = 390; z < 595; z += 9.5) for (let l = 0; l < 3; l++) cont.push([x, 1.6 + l * 2.68, z, MW_CONT[(Math.random() * 7) | 0]]); addObstacle(b[0], b[1], 385, 598, 'Bãi Container Cảng'); });
+      mwInst(new THREE.BoxGeometry(2.45, 2.65, 8.5), new THREE.MeshLambertMaterial({ color: 0xffffff }), cont.length, p => cont.forEach(c => p(c[0], c[1], c[2], 1, 1, 1, c[3])), g);
+      // ---- BẾN, BIỂN, TÀU, CẦN CẨU ----
+      const ap = new THREE.Mesh(new THREE.PlaneGeometry(500, 50), conc); ap.rotation.x = -Math.PI / 2; ap.position.set(400, .15, 625); ap.receiveShadow = true; g.add(ap);
+      const sea = new THREE.Mesh(new THREE.PlaneGeometry(800, 450), new THREE.MeshStandardMaterial({ color: 0x0369a1, roughness: .2, metalness: .3 })); sea.rotation.x = -Math.PI / 2; sea.position.set(400, .05, 875); g.add(sea);
+      addObstacle(150, 650, 647, 653, 'Mép Bến', true);
+      [[300, 230, 0x1d4ed8], [540, 180, 0xb91c1c]].forEach(sh => {
+        const cx = sh[0], len = sh[1], z = 672;
+        bx(len, 16, 36, new THREE.MeshStandardMaterial({ color: sh[2] }), cx, 4, z); bx(len, 2, 36.5, new THREE.MeshStandardMaterial({ color: 0x111827 }), cx, -3, z);
+        bx(14, 22, 30, new THREE.MeshStandardMaterial({ color: 0xf8fafc }), cx - len / 2 + 14, 23, z); bx(10, 3, 30.5, glass, cx - len / 2 + 14, 30, z);
+        const fn = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 3, 8, 12), new THREE.MeshLambertMaterial({ color: 0xdc2626 })); fn.position.set(cx - len / 2 + 22, 38, z); g.add(fn);
+        const sc = []; for (let x = cx - len / 2 + 30; x < cx + len / 2 - 8; x += 3) for (let r = -3.5; r <= 3.5; r++) for (let l = 0; l < 4; l++) sc.push([x, 13.4 + l * 2.7, z + r * 4.4, MW_CONT[(Math.random() * 7) | 0]]);
+        mwInst(new THREE.BoxGeometry(2.45, 2.65, 4.2), new THREE.MeshLambertMaterial({ color: 0xffffff }), sc.length, p => sc.forEach(c => p(c[0], c[1], c[2], 1, 1, 1, c[3])), g);
+      });
+      const cm = new THREE.MeshStandardMaterial({ color: 0x2563eb, metalness: .4, roughness: .5 });
+      [230, 300, 370, 540].forEach(x => { [[-6, 618], [6, 618], [-6, 642], [6, 642]].forEach(l => bx(1.8, 30, 1.8, cm, x + l[0], 15, l[1])); bx(15, 2, 28, cm, x, 31, 630); bx(3, 3, 80, cm, x, 33, 650); bx(5, 4, 5, new THREE.MeshStandardMaterial({ color: 0xfacc15 }), x, 30, 660); });
+      const qs = mwLabel('BẾN CONTAINER CÁT LÁI • CẦU TÀU SỐ 1-2', 60, 3, 36, '#0a246a'); qs.position.set(300, 6, 598.4); g.add(qs);
+      scene.add(g);
+      MW_ZONES.push({ x0: 150, x1: 650, z0: 598, z1: 650, t: 'BẾN CẢNG CÁT LÁI (TÀU • CẨU STS)' });
+    }
+
+    function buildVillage() {
+      mwRoad(-190, -17, 240, 250); mwRoad(-190, -17, 320, 330);
+      const H = [], cols = [0xfde68a, 0xfca5a5, 0xbae6fd, 0xd9f99d, 0xf5d0fe, 0xe5e7eb, 0xfdba74].map(c => new THREE.Color(c)), roofC = [0xb91c1c, 0x7c2d12, 0x1e3a8a, 0x166534].map(c => new THREE.Color(c));
+      [[232, 1], [258, -1], [312, 1], [338, -1]].forEach(r => { for (let x = -180; x <= -50; x += 13) { H.push({ x: x + (Math.random() - .5) * 2, z: r[0], f: r[1], h: Math.random() < .5 ? 4.5 : 8, c: cols[(Math.random() * 7) | 0], r: roofC[(Math.random() * 4) | 0] }); addObstacle(x - 3.6, x + 3.6, r[0] - 4.2, r[0] + 4.2, 'Nhà Dân'); } });
+      const g = new THREE.Group(), box = new THREE.BoxGeometry(1, 1, 1), cone = new THREE.ConeGeometry(.7071, 1, 4); cone.rotateY(Math.PI / 4);
+      mwInst(box, new THREE.MeshLambertMaterial({ color: 0xffffff }), H.length, p => H.forEach(h => p(h.x, h.h / 2 + .25, h.z, 6, h.h, 8, h.c)), g);
+      mwInst(cone, new THREE.MeshLambertMaterial({ color: 0xffffff }), H.length, p => H.forEach(h => p(h.x, h.h + .25 + 1.3, h.z, 7, 2.6, 9, h.r)), g);
+      const dark = new THREE.MeshLambertMaterial({ color: 0x1e3a8a });
+      mwInst(box, dark, H.length * 2, p => H.forEach(h => { p(h.x - 1.6, 1.5, h.z + h.f * 4.05, 1.3, 2.4, .2); p(h.x + 1.5, h.h > 5 ? 5.5 : 2.4, h.z + h.f * 4.05, 1.6, 1.3, .2); }), g);
+      const T = []; for (let x = -185; x <= -45; x += 9) [268, 300].forEach(z => T.push([x + Math.random() * 3, z + Math.random() * 4]));
+      mwInst(new THREE.CylinderGeometry(.25, .3, 2.5, 6), new THREE.MeshLambertMaterial({ color: 0x78350f }), T.length, p => T.forEach(t => p(t[0], 1.25, t[1])), g);
+      mwInst(new THREE.SphereGeometry(2.2, 8, 6), new THREE.MeshLambertMaterial({ color: 0x15803d }), T.length, p => T.forEach(t => p(t[0], 4.2, t[1])), g);
+      const sg = mwLabel('KHU DÂN CƯ CÁT LÁI', 12, 2.4, 44, '#166534'); sg.position.set(-26, 4, 236); g.add(sg);
+      scene.add(g); MW_ZONES.push({ x0: -190, x1: -20, z0: 225, z1: 345, t: 'KHU DÂN CƯ CÁT LÁI (GIẢM TỐC ĐỘ)' });
+    }
+
+    window.addEventListener('keydown', e => {
+      const q = e.altKey && MW_ALT[e.code]; if (!q || typeof truckMesh === 'undefined' || !truckMesh) return; e.preventDefault();
+      truckMesh.position.set(q[0], truckMesh.position.y, q[1]); truckMesh.rotation.y = q[2]; gameState.truckRot = q[2]; gameState.speed = 0; showHUDToast('Đã đến: ' + q[3] + ' (Alt+1..6)');
+    });
+
+    /* ===== CHẾ ĐỘ ĐI BỘ [V] + THAO TÁC NHIỆM VỤ TRONG TOÀN KHU VỰC (KHÔNG CẦN VÒNG XANH) ===== */
+    window.mwWalking = false;
+    const mwWalk = { x: 0, z: 0, yaw: 0, t: 0, mesh: null };
+    let mwHintStep = 0;
+    function mwActor() { return window.mwWalking ? mwWalk : truckMesh.position; }
+    function mwInStationZone(st, x, z) {
+      const R = st.step === 1 ? { x0: 40, x1: 380, z0: -314, z1: -180 } : st.step === 5 ? { x0: 30, x1: 200, z0: 210, z1: 330 } : null;
+      return R ? (x > R.x0 && x < R.x1 && z > R.z0 && z < R.z1) : Math.hypot(x - st.x, z - st.z) <= 45;
+    }
+    function mwBlocked(x, z) {
+      const r = .4;
+      for (let i = 0; i < COLLISION_OBSTACLES.length; i++) { const o = COLLISION_OBSTACLES[i]; if (o.isBarrier && (gameState.step >= 7 || gameState.eportPaid)) continue; if (x >= o.minX - r && x <= o.maxX + r && z >= o.minZ - r && z <= o.maxZ + r) return true; }
+      return false;
+    }
+    function mwMakeWalker() {
+      const g = new THREE.Group(), L = {};
+      const mk = (geo, c, x, y, z, pivotY) => { if (pivotY) geo.translate(0, -pivotY, 0); const o = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: c })); o.position.set(x, y, z); o.castShadow = true; g.add(o); return o; };
+      mk(new THREE.BoxGeometry(.7, .9, .4), 0xf97316, 0, 1.35, 0);
+      L.legL = mk(new THREE.BoxGeometry(.28, .9, .3), 0x1e293b, -.2, .9, 0, .45); L.legR = mk(new THREE.BoxGeometry(.28, .9, .3), 0x1e293b, .2, .9, 0, .45);
+      L.armL = mk(new THREE.BoxGeometry(.22, .8, .24), 0xf97316, -.47, 1.75, 0, .4); L.armR = mk(new THREE.BoxGeometry(.22, .8, .24), 0xf97316, .47, 1.75, 0, .4);
+      mk(new THREE.SphereGeometry(.26, 10, 10), 0xf1c9a5, 0, 2.0, 0);
+      const h = mk(new THREE.SphereGeometry(.31, 10, 8), 0xfacc15, 0, 2.1, 0); h.scale.y = .65;
+      g.userData = L; return g;
+    }
+    function mwWalkCam() {
+      if (gameState.cameraMode === 'GOD_MODE' || !mwWalk.mesh) return false;
+      const vc = window.virtualControls, K = keysPressed, w = mwWalk;
+      const fw = K['w'] || K['arrowup'] || vc.gas, bk = K['s'] || K['arrowdown'] || vc.brake, lf = K['a'] || K['arrowleft'] || vc.steerLeft, rt = K['d'] || K['arrowright'] || vc.steerRight;
+      if (lf) w.yaw += .045; if (rt) w.yaw -= .045;
+      const sp = (K['shift'] ? .32 : .15) * (fw ? 1 : bk ? -.6 : 0);
+      if (sp) { const nx = w.x - Math.sin(w.yaw) * sp, nz = w.z - Math.cos(w.yaw) * sp; if (!mwBlocked(nx, w.z)) w.x = nx; if (!mwBlocked(w.x, nz)) w.z = nz; w.t += Math.abs(sp) * 1.8; }
+      const m = w.mesh, u = m.userData, sw = sp ? Math.sin(w.t * 4) * .7 : 0;
+      m.position.set(w.x, .1, w.z); m.rotation.y = w.yaw; u.legL.rotation.x = sw; u.legR.rotation.x = -sw; u.armL.rotation.x = -sw; u.armR.rotation.x = sw;
+      camera.position.set(w.x + Math.sin(w.yaw) * 7, 3.8, w.z + Math.cos(w.yaw) * 7); camera.lookAt(w.x, 1.6, w.z);
+      return true;
+    }
+    function mwToggleWalk() {
+      if (!truckMesh) return;
+      if (!window.mwWalking) {
+        if (gameState.cameraMode === 'GOD_MODE') { showHUDToast('Tắt chế độ GOD (G) trước khi đi bộ.'); return; }
+        if (Math.abs(gameState.speed) > .05) { showHUDToast('Hãy dừng xe hẳn (phanh Space) trước khi xuống xe đi bộ.'); return; }
+        const r = truckMesh.rotation.y, tx = truckMesh.position.x, tz = truckMesh.position.z;
+        const c = [3.2, -3.2, 0].map(o => [tx + Math.cos(r) * o, tz - Math.sin(r) * o]).find(p => !mwBlocked(p[0], p[1])) || [tx, tz];
+        mwWalk.x = c[0]; mwWalk.z = c[1]; mwWalk.yaw = r;
+        if (!mwWalk.mesh) { mwWalk.mesh = mwMakeWalker(); scene.add(mwWalk.mesh); }
+        mwWalk.mesh.visible = true; window.mwWalking = true; gameState.speed = 0;
+        showHUDToast('🚶 ĐÃ XUỐNG XE: W/S đi tới/lùi, A/D xoay, Shift chạy, [E] thao tác nhiệm vụ, [V] lên xe (đứng gần xe).');
+      } else {
+        if (Math.hypot(mwWalk.x - truckMesh.position.x, mwWalk.z - truckMesh.position.z) > 9) { showHUDToast('Bạn cách xe quá xa — hãy đi bộ lại gần xe (dưới 9m) rồi bấm [V] để lên xe.'); return; }
+        window.mwWalking = false; mwWalk.mesh.visible = false; showHUDToast('🚛 ĐÃ LÊN XE.');
+      }
+      const b = document.getElementById('mw-walk-btn'); if (b) b.textContent = window.mwWalking ? '🚛 LÊN XE [V]' : '🚶 ĐI BỘ [V]';
+    }
+    function mwInitWalkUI() {
+      const b = document.createElement('button'); b.id = 'mw-walk-btn'; b.textContent = '🚶 ĐI BỘ [V]';
+      b.style.cssText = 'position:fixed;right:12px;bottom:170px;z-index:60;padding:8px 12px;border-radius:12px;background:#0f172a;color:#fff;border:2px solid #38bdf8;font:700 11px Arial;cursor:pointer';
+      b.onclick = mwToggleWalk; document.body.appendChild(b);
+      window.addEventListener('keydown', e => { if (/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return; if (e.code === 'KeyV') mwToggleWalk(); });
+    }
+
     function buildPerimeterSecurityFences() {
       const fenceMat = new THREE.MeshLambertMaterial({ color: 0x475569 });
       // Rào phía Bắc (z = -160)
-      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(420, 3.5, 0.5), fenceMat);
-      fenceN.position.set(20, 1.75, -160);
+      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(173, 3.5, 0.5), fenceMat);
+      fenceN.position.set(-103.5, 1.75, -160);
       scene.add(fenceN);
-      addObstacle(-190, 230, -162, -158, "Hàng Rào An Ninh Phía Bắc");
+      addObstacle(-190, -17, -162, -158, "Hàng Rào An Ninh Phía Bắc");
 
       // Rào phía Nam (z = 160)
-      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(420, 3.5, 0.5), fenceMat);
-      fenceS.position.set(20, 1.75, 160);
+      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(173, 3.5, 0.5), fenceMat);
+      fenceS.position.set(-103.5, 1.75, 160);
       scene.add(fenceS);
-      addObstacle(-190, 230, 158, 162, "Hàng Rào An Ninh Phía Nam");
+      addObstacle(-190, -17, 158, 162, "Hàng Rào An Ninh Phía Nam");
 
       // Rào phía Đông (x = 230)
       const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.5, 3.5, 320), fenceMat);
@@ -4225,11 +4684,11 @@
       if (code === 'KeyE' || key === 'e') {
         const cur = STATION_LOCATIONS[gameState.step - 1];
         if (cur) {
-          const d = Math.hypot(truckMesh.position.x - cur.x, truckMesh.position.z - cur.z);
-          if (d <= 18) {
-            interactCurrentStation();
+          const ap = mwActor(); const d = Math.hypot(ap.x - cur.x, ap.z - cur.z);
+          if (d <= 18 || mwInStationZone(cur, ap.x, ap.z)) {
+            handleInteraction();
           } else {
-            showHUDToast(`BẠN ĐANG CÁCH TRẠM ${Math.round(d)}M: Hãy lái xe vào vòng neon màu xanh để thao tác [E]!`);
+            showHUDToast(`BẠN ĐANG CÁCH TRẠM ${Math.round(d)}M: Hãy đi/lái vào khu vực nhiệm vụ rồi nhấn [E]!`);
           }
         }
       }
@@ -4549,6 +5008,7 @@
     // CẬP NHẬT TỌA ĐỘ CAMERA THEO XE, CABIN HOẶC GÓC NHÌN CHÚA (XUẤT HỒN XUYÊN TƯỜNG)
     function updateCameraPosition() {
       if (!camera || !truckMesh) return;
+      if (window.mwWalking && mwWalkCam()) return;
 
       if (gameState.cameraMode === 'GOD_MODE') {
         // 1. DI CHUYỂN GÓC NHÌN CHÚA (XUẤT HỒN XUYÊN TƯỜNG KHÔNG GIỚI HẠN)
@@ -4655,6 +5115,7 @@
 
     function updateDrivingPhysics() {
       if (!truckMesh) return;
+      if (window.mwWalking) { gameState.speed = 0; return; }
 
       const maxForward = 0.56;
       const maxReverse = -0.24;
@@ -4823,6 +5284,7 @@
 
       // Cập nhật khói xả pô xe
       updateExhaustSystem();
+      updateMegaWarehouse();
 
       // Xoay đài Radar hàng hải TOS Cát Lái
       if (spinningRadarMesh) {
@@ -5476,7 +5938,7 @@
       }
 
       jumpToStep(1);
-      showHUDToast(`ĐÃ NHẬN ĐỀ #${activeScenario.id}: ${activeScenario.name}. Đến cửa Dock 01 kiểm hàng xuất!`);
+      showHUDToast(`ĐÃ NHẬN ĐỀ #${activeScenario.id}: ${activeScenario.name}. Lái xe vào trong Tổng Kho Sa-tras (phím T = ra cổng kho, R = đổi mái)!`);
     }
 
     function jumpToStep(step) {
@@ -5488,6 +5950,7 @@
         truckMesh.position.z = targetLoc.z + 14;
         truckMesh.rotation.y = 0;
         gameState.truckRot = 0;
+        if (window.mwWalking) { mwWalk.x = truckMesh.position.x + 3.2; mwWalk.z = truckMesh.position.z; }
       }
 
       for (let i = 1; i <= 7; i++) {
