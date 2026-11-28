@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <title>LOGISTICS OPS SIMULATOR 3D - HIỆN TRƯỜNG KHO TÂN TẠO ĐẾN CẢNG CÁT LÁI</title>
-  
+
   <!-- Tailwind CSS & Phosphor Icons CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -20,9 +20,9 @@
       #rotate-warning { display: flex !important; }
       #game-container { display: none !important; }
     }
-    
-    * { 
-      box-sizing: border-box; 
+
+    * {
+      box-sizing: border-box;
       -webkit-touch-callout: none;
     }
     html, body {
@@ -161,7 +161,7 @@
 
     <!-- THANH TRẠNG THÁI TRÊN CÙNG (OPS TOP HUD 16:9) -->
     <header class="h-10 bg-slate-950/95 border-b border-cyan-800/50 px-3 flex items-center justify-between z-30 backdrop-blur select-none">
-      
+
       <!-- LOGO & CHỌN ĐỀ BÀI -->
       <div class="flex items-center gap-2 md:gap-3">
         <div class="flex items-center gap-1.5 text-xs font-black text-cyan-400 font-mono tracking-wider">
@@ -268,8 +268,8 @@
           </button>
         </div>
         <div class="flex flex-wrap items-center justify-center gap-2 text-[10px] text-purple-200">
-          <span>Kéo chuột/vuốt: Xoay 360°</span> • 
-          <span>[W/S/A/D]: Bay ngang</span> • 
+          <span>Kéo chuột/vuốt: Xoay 360°</span> •
+          <span>[W/S/A/D]: Bay ngang</span> •
           <button onmousedown="window.godFlyV = 1" onmouseup="window.godFlyV = 0" onmouseleave="window.godFlyV = 0" ontouchstart="window.godFlyV = 1; event.preventDefault();" ontouchend="window.godFlyV = 0; event.preventDefault();" class="px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-white font-bold active:scale-95 transition">Bay Lên [Space]</button>
           <button onmousedown="window.godFlyV = -1" onmouseup="window.godFlyV = 0" onmouseleave="window.godFlyV = 0" ontouchstart="window.godFlyV = -1; event.preventDefault();" ontouchend="window.godFlyV = 0; event.preventDefault();" class="px-2 py-0.5 rounded bg-purple-700 hover:bg-purple-600 text-white font-bold active:scale-95 transition">Hạ Xuống [Q]</button>
         </div>
@@ -472,7 +472,7 @@
         <!-- CANVAS BẢN ĐỒ ĐỘ HỌA CHI TIẾT TỰ VẼ -->
         <div class="flex-1 relative bg-[#1a202c] rounded-xl overflow-hidden border border-slate-700 flex flex-col">
           <canvas id="canvas-full-map" class="w-full flex-1"></canvas>
-          
+
           <!-- OVERLAY TỌA ĐỘ VỆ TINH HUD -->
           <div id="map-satellite-telemetry" class="absolute top-2 left-2 z-10 glass-panel bg-slate-950/80 border border-cyan-500/40 px-2.5 py-1 rounded text-[10px] font-mono text-cyan-300 pointer-events-none flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
@@ -480,12 +480,12 @@
             <span class="text-slate-400">|</span>
             <span class="text-amber-300">10°45'45.4"N 106°47'37.3"E</span>
           </div>
-          
+
           <!-- THANH CHÚ GIẢI THÔNG TIN TUYẾN ĐƯỜNG BÊN DƯỚI -->
           <div class="bg-slate-900/90 border-t border-slate-800 p-2 text-[11px] grid grid-cols-2 md:grid-cols-4 gap-2">
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
-              <span>1. Kho CFS Tân Tạo</span>
+              <span>1. Depot lấy vỏ → Kho CFS Tân Tạo</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="w-3 h-3 rounded-full bg-amber-500"></span>
@@ -560,7 +560,7 @@
         </div>
         <div class="space-y-2 flex-1 overflow-y-auto custom-scroll text-xs">
           <p class="text-slate-300 text-[11px]">Tài xế/OPS phải kiểm tra kỹ 7 điểm trước khi ký nhận vỏ cont. Nhận vỏ thủng rách sẽ bị phạt <b>800.000đ</b> khi quay đầu!</p>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
             <label class="flex items-center gap-2 p-2 rounded bg-slate-900 border border-slate-800 cursor-pointer">
               <input type="checkbox" id="chk-iicl-1" checked class="w-4 h-4 text-cyan-500 rounded">
@@ -949,7 +949,7 @@
         </div>
       <!-- 10. SƠ ĐỒ MẶT BẰNG KHO HÀNG SA-TRAS CHI TIẾT (WAREHOUSE BLUEPRINT MODAL) -->
       <div id="modal-satras-blueprint" class="absolute inset-1 md:inset-4 z-50 glass-panel rounded-2xl p-3 md:p-5 hidden flex-col max-w-6xl mx-auto shadow-2xl border border-emerald-500/60 backdrop-blur-2xl overflow-hidden">
-        
+
         <!-- HEADER SƠ ĐỒ KHO -->
         <div class="flex flex-wrap justify-between items-center border-b border-slate-700/80 pb-2 mb-2 gap-2">
           <div class="flex items-center gap-2">
@@ -1097,7 +1097,7 @@
         <!-- TAB 3: SO SÁNH 4 HỆ THỐNG KHUNG KỆ CÔNG NGHIỆP SA-TRAS -->
         <div id="satras-view-racking" class="flex-1 hidden overflow-y-auto custom-scroll pr-1 space-y-2.5 text-xs">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            
+
             <!-- 1. KỆ SELECTIVE -->
             <div class="bg-slate-900/90 border-2 border-blue-600/70 p-3 rounded-xl shadow space-y-1.5">
               <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
@@ -1172,7 +1172,7 @@
         <!-- TAB 4: THIẾT BỊ NÂNG HẠ TRONG KHO (FORKLIFTS & HAND TRUCKS) -->
         <div id="satras-view-equipment" class="flex-1 hidden overflow-y-auto custom-scroll pr-1 space-y-2 text-xs">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            
+
             <div class="bg-slate-900/90 border border-amber-600/50 p-3 rounded-xl space-y-2">
               <div class="flex items-center gap-2 text-amber-400 font-bold text-sm border-b border-slate-800 pb-1">
                 <i class="ph-bold ph-forklift text-xl"></i>
@@ -1238,11 +1238,11 @@
     <footer id="game-footer" class="h-10 bg-slate-950/95 border-t border-cyan-800/40 px-2 flex items-center justify-between text-[11px] z-30 select-none transition-all duration-300">
       <div id="footer-steps-container" class="flex items-center gap-1 overflow-x-auto custom-scroll w-full py-1">
         <button id="step-btn-1" onclick="jumpToStep(1)" class="px-2.5 py-0.5 rounded bg-cyan-600 text-white font-bold whitespace-nowrap shadow flex items-center gap-1 transition">
-          <i class="ph-bold ph-warehouse"></i> 1. Kho Tân Tạo
+          <i class="ph-bold ph-package"></i> 1. Lấy Vỏ Depot
         </button>
         <i class="ph-bold ph-caret-right text-slate-600 text-xs"></i>
         <button id="step-btn-2" onclick="jumpToStep(2)" class="px-2.5 py-0.5 rounded bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap flex items-center gap-1 transition">
-          <i class="ph-bold ph-package"></i> 2. Lấy Vỏ Depot
+          <i class="ph-bold ph-warehouse"></i> 2. Đóng Hàng & Seal
         </button>
         <i class="ph-bold ph-caret-right text-slate-600 text-xs"></i>
         <button id="step-btn-3" onclick="jumpToStep(3)" class="px-2.5 py-0.5 rounded bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap flex items-center gap-1 transition">
@@ -1359,14 +1359,14 @@
 
       // NHÓM 2: THỦY SẢN LẠNH (EXP-11 -> EXP-20)
       { id: 11, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Tôm sú đông lạnh Black Tiger", hs: "03061721", pkg: "1.200 thùng Master", net: 14400, tare: 4500, cont: "40' HR", inco: "CIF", pod: "Osaka", usd: 165600, req: "Kiểm dịch Thú Y Vùng VI (-18°C)" },
-      { id: 12, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Cá tra fillet đông lạnh", hs: "03046200", pkg: "1.500 thùng (10kg)", net: 15000, tare: 4500, cont: "40' HR", inco: "FOB", pod: "Cát Lái", usd: 43500, req: "Kiểm tra mạ băng và hóa chất (-20°C)" },
+      { id: 12, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Cá tra fillet đông lạnh", hs: "03046200", pkg: "1.500 thùng (10kg)", net: 15000, tare: 4500, cont: "40' HR", inco: "FOB", pod: "Singapore", usd: 43500, req: "Kiểm tra mạ băng và hóa chất (-20°C)" },
       { id: 13, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Mực nang nguyên con làm sạch", hs: "03074310", pkg: "800 thùng", net: 8000, tare: 4200, cont: "20' RF", inco: "CFR", pod: "Busan", usd: 72000, req: "Chứng thư nguồn gốc khai thác IUU (-18°C)" },
       { id: 14, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Bạch tuộc đông lạnh 2 da", hs: "03075200", pkg: "900 thùng", net: 9000, tare: 4200, cont: "20' RF", inco: "CIF", pod: "Incheon", usd: 85500, req: "Giấy chứng nhận y tế Health Cert (-18°C)" },
       { id: 15, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Cá ngừ đại dương đóng hộp", hs: "16041411", pkg: "1.800 thùng", net: 18000, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Los Angeles", usd: 99000, req: "Chứng nhận Dolphin-Safe" },
       { id: 16, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Thịt nghêu lụa hấp đông lạnh", hs: "03077200", pkg: "1.100 thùng", net: 11000, tare: 4200, cont: "20' RF", inco: "CIF", pod: "Genoa", usd: 60500, req: "Kiểm định độc tố sinh học biển (-18°C)" },
       { id: 17, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Chả cá Surimi từ cá mối", hs: "03049900", pkg: "1.000 thùng", net: 20000, tare: 4500, cont: "40' RF", inco: "CFR", pod: "Vladivostok", usd: 56000, req: "Giấy xét nghiệm vi sinh (-22°C)" },
       { id: 18, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Cua lột đông lạnh Cà Mau", hs: "03061400", pkg: "600 thùng", net: 6000, tare: 4200, cont: "20' RF", inco: "CIF", pod: "Sydney", usd: 108000, req: "Kiểm dịch nghiêm ngặt DAFF Úc (-18°C)" },
-      { id: 19, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Thanh long ruột đỏ Bình Thuận", hs: "08109092", pkg: "1.400 thùng carton có lỗ", net: 12600, tare: 4500, cont: "40' RF", inco: "FOB", pod: "Cát Lái", usd: 27720, req: "Cài đặt độ thông gió Vent 15 cbm/h (+5°C)" },
+      { id: 19, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Thanh long ruột đỏ Bình Thuận", hs: "08109092", pkg: "1.400 thùng carton có lỗ", net: 12600, tare: 4500, cont: "40' RF", inco: "FOB", pod: "Busan", usd: 27720, req: "Cài đặt độ thông gió Vent 15 cbm/h (+5°C)" },
       { id: 20, group: 'THUY_SAN', groupName: 'Thủy Sản Lạnh', name: "Xoài cát Hòa Lộc tươi", hs: "08045020", pkg: "1.000 thùng có xốp lót", net: 10000, tare: 4500, cont: "40' RF", inco: "CIF", pod: "Incheon", usd: 42000, req: "Xử lý hơi nước nóng VHT (+8°C)" },
 
       // NHÓM 3: MAY MẶC & DA GIÀY (EXP-21 -> EXP-30)
@@ -1374,7 +1374,7 @@
       { id: 22, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Quần Jean denim dệt thoi", hs: "62034200", pkg: "1.100 thùng carton", net: 17600, tare: 4200, cont: "40' HC", inco: "FOB", pod: "New York", usd: 143000, req: "Kiểm tra quy tắc xuất xứ từ sợi" },
       { id: 23, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Áo thun Polo 100% Cotton", hs: "61091010", pkg: "1.500 thùng", net: 15000, tare: 4200, cont: "40' HC", inco: "CIF", pod: "Tokyo", usd: 97500, req: "C/O mẫu VJ (AJCEP)" },
       { id: 24, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Giày chạy bộ đế cao su", hs: "64041190", pkg: "2.200 thùng Master", net: 19800, tare: 4200, cont: "40' HC", inco: "CFR", pod: "London", usd: 187000, req: "Giấy kiểm tra chống trượt và độ mòn" },
-      { id: 25, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Giày da nam buộc dây", hs: "64039100", pkg: "1.400 đôi", net: 9800, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Cát Lái", usd: 91000, req: "Khai báo chủng loại da thuộc" },
+      { id: 25, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Giày da nam buộc dây", hs: "64039100", pkg: "1.400 đôi", net: 9800, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Rotterdam", usd: 91000, req: "Khai báo chủng loại da thuộc" },
       { id: 26, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Vải dệt kim sợi nhân tạo", hs: "60063200", pkg: "250 cuộn màng co", net: 18000, tare: 4000, cont: "40' DC", inco: "CIF", pod: "Bangkok", usd: 54000, req: "Đo khối lượng và mật độ sợi" },
       { id: 27, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Ba lô du lịch chống nước", hs: "42029200", pkg: "600 thùng", net: 9600, tare: 4200, cont: "40' HC", inco: "CFR", pod: "Toronto", usd: 72000, req: "C/O mẫu CPTPP" },
       { id: 28, group: 'MAY_MAC', groupName: 'May Mặc & Da Giày', name: "Găng tay đấm bốc tập võ", hs: "95069900", pkg: "400 thùng", net: 4800, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Marseille", usd: 36000, req: "Kiểm tra hàm lượng hóa chất REACH" },
@@ -1383,19 +1383,19 @@
 
       // NHÓM 4: GỖ MỸ NGHỆ (EXP-31 -> EXP-40)
       { id: 31, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Bàn ăn gỗ tràm tự nhiên", hs: "94036090", pkg: "220 kiện KD", net: 15400, tare: 4200, cont: "40' HC", inco: "CIF", pod: "Long Beach", usd: 77000, req: "Bảng kê xác nhận Hạt Kiểm Lâm" },
-      { id: 32, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Ghế sofa đệm bọc da khung sồi", hs: "94016100", pkg: "90 bộ lớn", net: 10800, tare: 4200, cont: "40' HC", inco: "FOB", pod: "Cát Lái", usd: 58500, req: "Khai báo diện tích CBM chiếm chỗ" },
+      { id: 32, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Ghế sofa đệm bọc da khung sồi", hs: "94016100", pkg: "90 bộ lớn", net: 10800, tare: 4200, cont: "40' HC", inco: "FOB", pod: "Long Beach", usd: 58500, req: "Khai báo diện tích CBM chiếm chỗ" },
       { id: 33, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Tủ quần áo MDF Melamine", hs: "94035000", pkg: "350 kiện", net: 18500, tare: 4000, cont: "40' DC", inco: "CIF", pod: "Melbourne", usd: 66500, req: "Kiểm định nồng độ Formaldehyde" },
       { id: 34, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Giường ngủ gỗ ghép thanh", hs: "94035000", pkg: "180 kiện", net: 16200, tare: 4200, cont: "40' HC", inco: "CFR", pod: "Liverpool", usd: 54000, req: "Bắt buộc hun trùng gỗ Pallet" },
       { id: 35, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Khay đĩa mây tre đan", hs: "46021100", pkg: "600 kiện", net: 6000, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Paris", usd: 42000, req: "Phyto mọt tre + sấy chống mốc" },
-      { id: 36, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Chậu gốm tráng men sân vườn", hs: "69120000", pkg: "450 kiện pallet", net: 21500, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Cát Lái", usd: 31500, req: "Chằng buộc Lashing chống vỡ" },
+      { id: 36, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Chậu gốm tráng men sân vườn", hs: "69120000", pkg: "450 kiện pallet", net: 21500, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Yokohama", usd: 31500, req: "Chằng buộc Lashing chống vỡ" },
       { id: 37, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Thảm cói lót sàn thủ công", hs: "46012100", pkg: "500 cuộn", net: 7500, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Antwerp", usd: 37500, req: "Giấy chứng nhận nguồn gốc tự nhiên" },
       { id: 38, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Đèn lồng khung tre bọc lụa", hs: "94055000", pkg: "300 thùng", net: 3600, tare: 3800, cont: "20' DC", inco: "CFR", pod: "Oakland", usd: 24000, req: "Kiểm tra chống cháy cục bộ" },
       { id: 39, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Muỗng nĩa gỗ dừa Bến Tre", hs: "44199000", pkg: "400 thùng", net: 4800, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Tokyo", usd: 32000, req: "Chứng nhận an toàn tiếp xúc thực phẩm" },
-      { id: 40, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Tượng điêu khắc đá Non Nước", hs: "68029100", pkg: "8 kiện chằng xích", net: 23000, tare: 4000, cont: "20' OT", inco: "FOB", pod: "Cát Lái", usd: 64000, req: "Thuê cẩu chuyên dụng hạ bãi cảng" },
+      { id: 40, group: 'GO_MY_NGHE', groupName: 'Gỗ Mỹ Nghệ', name: "Tượng điêu khắc đá Non Nước", hs: "68029100", pkg: "8 kiện chằng xích", net: 23000, tare: 4000, cont: "20' OT", inco: "FOB", pod: "Los Angeles", usd: 64000, req: "Thuê cẩu chuyên dụng hạ bãi cảng" },
 
       // NHÓM 5: ĐIỆN TỬ & CƠ KHÍ (EXP-41 -> EXP-50)
       { id: 41, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Bo mạch máy giặt công nghiệp", hs: "85340000", pkg: "1.000 khay", net: 8000, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Đài Bắc", usd: 92000, req: "Đóng gói túi hút chân không ESD" },
-      { id: 42, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Tai nghe Bluetooth không dây", hs: "85183010", pkg: "5.000 cái", net: 6500, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Cát Lái", usd: 145000, req: "Khai báo tem pin Lithium DG Class 9" },
+      { id: 42, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Tai nghe Bluetooth không dây", hs: "85183010", pkg: "5.000 cái", net: 6500, tare: 3800, cont: "20' DC", inco: "FOB", pod: "Laem Chabang", usd: 145000, req: "Khai báo tem pin Lithium DG Class 9" },
       { id: 43, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Cáp điện hạ thế lõi đồng", hs: "85444922", pkg: "40 cuộn gỗ tròn", net: 21000, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Jakarta", usd: 115500, req: "Khai báo định mức nguyên liệu đồng" },
       { id: 44, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Ống thép đúc không hàn dẫn dầu", hs: "73041900", pkg: "120 bó đai thép", net: 24000, tare: 4000, cont: "40' DC", inco: "CFR", pod: "Kuwait", usd: 72000, req: "Chứng chỉ xuất xưởng Mill Test Cert" },
       { id: 45, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Bu lông ốc vít Inox cường độ cao", hs: "73181500", pkg: "800 thùng gỗ (25kg)", net: 20000, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Singapore", usd: 58000, req: "Kiểm tra độ cứng và hàm lượng Niken" },
@@ -1403,7 +1403,7 @@
       { id: 47, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Máy bơm nước ly tâm lớn", hs: "84137042", pkg: "85 kiện máy", net: 17000, tare: 3800, cont: "20' DC", inco: "CIF", pod: "Chittagong", usd: 89250, req: "Bảo hành và phiếu kiểm tra rò rỉ" },
       { id: 48, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Bình ắc quy chì khô xe máy", hs: "85071099", pkg: "1.600 bình", net: 19200, tare: 3800, cont: "20' DC", inco: "CFR", pod: "Manila", usd: 76800, req: "Chứng nhận vận tải biển IMDG Code" },
       { id: 49, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Khung xe đạp địa hình nhôm", hs: "87149110", pkg: "700 thùng", net: 8400, tare: 4200, cont: "40' HC", inco: "CIF", pod: "Rotterdam", usd: 105000, req: "C/O mẫu EUR.1 xác nhận xuất xứ" },
-      { id: 50, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Màn hình LCD taplo xe điện", hs: "85285200", pkg: "2.500 chiếc", net: 12500, tare: 4000, cont: "40' DC", inco: "FOB", pod: "Cát Lái", usd: 225000, req: "Tem chống sốc ShockWatch dán thùng" }
+      { id: 50, group: 'DIEN_TU', groupName: 'Điện Tử & Cơ Khí', name: "Màn hình LCD taplo xe điện", hs: "85285200", pkg: "2.500 chiếc", net: 12500, tare: 4000, cont: "40' DC", inco: "FOB", pod: "Hamburg", usd: 225000, req: "Tem chống sốc ShockWatch dán thùng" }
     ];
 
     /* =========================================================
@@ -2031,6 +2031,15 @@
     }
     const soundEngine = new AudioSynthesizer();
 
+    function toggleAudio() {
+      soundEngine.muted = !soundEngine.muted;
+      if (soundEngine.engineGain && soundEngine.ctx) {
+        soundEngine.engineGain.gain.setTargetAtTime(0, soundEngine.ctx.currentTime, 0.05);
+      }
+      const icon = document.getElementById('sound-icon');
+      if (icon) icon.className = 'ph-bold ' + (soundEngine.muted ? 'ph-speaker-slash' : 'ph-speaker-high');
+    }
+
     /* =========================================================
        4. TRẠNG THÁI GAME, TÀI CHÍNH & CAMERA
        ========================================================= */
@@ -2104,12 +2113,6 @@
       return null;
     }
 
-    function getObstacleCenterDist(tx, tz, obs) {
-      const cx = (obs.minX + obs.maxX) / 2;
-      const cz = (obs.minZ + obs.maxZ) / 2;
-      return Math.hypot(tx - cx, tz - cz);
-    }
-
     // HIỆU ỨNG RUNG CHẤN CAMERA KHI VA CHẠM
     let cameraShakeIntensity = 0;
     function triggerCameraShake(amt = 0.55) {
@@ -2177,13 +2180,13 @@
     }
 
     const STATION_LOCATIONS = [
-      { step: 1, name: "Dock Trong Tổng Kho Sa-tras (45.560 m²)", x: 208, z: -222, street: "Tổng Kho Sa-tras, KCN Tân Tạo, Q. Bình Tân" },
-      { step: 2, name: "Depot Rỗng Tân Cảng Suối Tiên", x: 90, z: -90, street: "Xa Lộ Hà Nội, TP. Thủ Đức" },
+      { step: 1, name: "Depot Rỗng Tân Cảng Suối Tiên (Lấy Vỏ Cont)", x: 90, z: -90, street: "Xa Lộ Hà Nội, TP. Thủ Đức" },
+      { step: 2, name: "Dock Trong Tổng Kho Sa-tras (Đóng Hàng & Seal)", x: 208, z: -222, street: "Tổng Kho Sa-tras, KCN Tân Tạo, Q. Bình Tân" },
       { step: 3, name: "Trạm Cân Điện Tử 80T Nguyễn Thị Định", x: 190, z: -30, street: "Đường Nguyễn Thị Định, P. Cát Lái" },
       { step: 4, name: "Văn Phòng Khai HQ ECUS5", x: 140, z: 60, street: "Đường Đồng Văn Cống, P. Thạnh Mỹ Lợi" },
       { step: 5, name: "Chi Cục Hải Quan Cát Lái - Làn Soi Chiếu X-Ray", x: 115, z: 232, street: "Khuôn Viên Chi Cục HQ Cửa Khẩu Cảng Cát Lái" },
-      { step: 6, name: "Kiosk e-Port Tân Cảng Sài Gòn", x: -40, z: 100, street: "Khu Dịch Vụ e-Port Cát Lái" },
-      { step: 7, name: "Cổng B Cảng Cát Lái (Gate-in) & Bến Tàu", x: -140, z: 20, street: "Cổng B, Cảng Tân Cảng Cát Lái" }
+      { step: 6, name: "Kiosk e-Port Tân Cảng Sài Gòn (Quảng Trường Cổng Cảng)", x: 340, z: 300, street: "Quảng Trường Cổng Cảng Cát Lái" },
+      { step: 7, name: "Cổng B Cảng Cát Lái (Gate-in) & Bến Tàu", x: 320, z: 372, street: "Cổng B, Cảng Tân Cảng Cát Lái" }
     ];
 
     function initThreeJS() {
@@ -2291,9 +2294,9 @@
     // 2. BIỂN NƯỚC SÔNG ĐỒNG NAI / BẾN CẢNG CÁT LÁI VỚI SÓNG LĂN TĂN
     function buildOceanWater() {
       const waterGeo = new THREE.PlaneGeometry(320, 500, 48, 48);
-      const waterMat = new THREE.MeshStandardMaterial({ 
-        color: 0x0284c7, 
-        roughness: 0.1, 
+      const waterMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        roughness: 0.1,
         metalness: 0.8,
         transparent: true,
         opacity: 0.92
@@ -2308,8 +2311,8 @@
     function buildRoadAndVegetation() {
       // Nền cỏ tự nhiên
       const grassGeo = new THREE.PlaneGeometry(1400, 1400);
-      const grassMat = new THREE.MeshLambertMaterial({ 
-        map: TextureGenerator.createGrassTexture() 
+      const grassMat = new THREE.MeshLambertMaterial({
+        map: TextureGenerator.createGrassTexture()
       });
       const ground = new THREE.Mesh(grassGeo, grassMat);
       ground.rotation.x = -Math.PI / 2;
@@ -2318,8 +2321,8 @@
 
       // Trục đại lộ Nguyễn Thị Định / Đồng Văn Cống (Đường nhựa 4 làn xe)
       const roadGeo = new THREE.PlaneGeometry(34, 750);
-      const roadMat = new THREE.MeshLambertMaterial({ 
-        map: TextureGenerator.createAsphaltTexture() 
+      const roadMat = new THREE.MeshLambertMaterial({
+        map: TextureGenerator.createAsphaltTexture()
       });
       const mainRoad = new THREE.Mesh(roadGeo, roadMat);
       mainRoad.rotation.x = -Math.PI / 2;
@@ -2334,7 +2337,6 @@
       portTurnRoad.rotation.z = Math.PI / 2;
       portTurnRoad.position.set(-80, 0.09, 20);
       portTurnRoad.receiveShadow = true;
-      scene.add(portTurnRoad);
 
       // Nhánh đường sang trạm cân & depot
       const scaleRoadGeo = new THREE.PlaneGeometry(24, 220);
@@ -2531,7 +2533,7 @@
       // Thùng Container thật bọc Texture gân sóng dập nổi
       const contGeo = new THREE.BoxGeometry(2.45, 2.65, 8.8);
       const contTex = TextureGenerator.createContainerTexture('#0284c7', 'MAERSK', 'TCLU 582910-4');
-      const contMat = new THREE.MeshStandardMaterial({ 
+      const contMat = new THREE.MeshStandardMaterial({
         map: contTex,
         roughness: 0.5,
         metalness: 0.3
@@ -2594,7 +2596,7 @@
 
       // ===== 1. TỔNG KHO LOGISTICS SA-TRAS (TÂN TẠO - TP.HCM) =====
       const wh1 = new THREE.Group();
-      const wh1Mat = new THREE.MeshStandardMaterial({ 
+      const wh1Mat = new THREE.MeshStandardMaterial({
         map: TextureGenerator.createWarehouseTexture('TỔNG KHO LOGISTICS SA-TRAS', 'TRUNG TÂM PHÂN PHỐI & BẢO QUẢN HÀNG HÓA CHUẨN ISO', '#0a246a'),
         roughness: 0.55
       });
@@ -2603,7 +2605,6 @@
       wh1Body.castShadow = true;
       wh1Body.receiveShadow = true;
       wh1.add(wh1Body);
-      
 
       // 5 Cửa dock nâng hạ container tự động (Dock Levelers) & Mái che mưa
       for (let d = 9; d <= 2; d++) {
@@ -2633,8 +2634,8 @@
       const stagingGroup = new THREE.Group();
       // Sàn bê tông sơn vạch mắt cáo an toàn dạ quang
       const stagingFloorGeo = new THREE.PlaneGeometry(68, 16);
-      const stagingFloorMat = new THREE.MeshLambertMaterial({ 
-        map: TextureGenerator.createHatchedStripeTexture() 
+      const stagingFloorMat = new THREE.MeshLambertMaterial({
+        map: TextureGenerator.createHatchedStripeTexture()
       });
       const stagingFloor = new THREE.Mesh(stagingFloorGeo, stagingFloorMat);
       stagingFloor.rotation.x = -Math.PI / 2;
@@ -2717,25 +2718,20 @@
 
       // ===== 5. 4 HỆ THỐNG KHUNG KỆ CÔNG NGHIỆP SA-TRAS =====
       // 5.1 KỆ SELECTIVE (100% Pallet Access)
-      
 
       // 5.2 KỆ DOUBLE-DEEP (Sâu 2 Pallet)
-      
 
       // 5.3 KỆ DRIVE-IN (LIFO - Xe nâng chui vào lòng kệ)
-      
 
       // 5.4 KỆ PUSH-BACK (Trượt con lăn trọng lực)
-      
 
       // Biển tổng quan khu kệ lưu trữ bảo quản
       const racksGeneralSign = buildSignBoard(68, 6.5, -36, "KHU LƯU TRỮ BẢO QUẢN KHO SA-TRAS (4 HỆ THỐNG KỆ)", "SELECTIVE • DOUBLE DEEP • DRIVE IN • PUSH BACK", 'info');
-      
 
       // ===== 6. KHU TẬP KẾT THIẾT BỊ & TRẠM SẠC ĐIỆN XE NÂNG (CHARGING BAY) =====
       const stagingBay = new THREE.Group();
-      const bayFloor = new THREE.Mesh(new THREE.PlaneGeometry(24, 14), new THREE.MeshLambertMaterial({ 
-        map: TextureGenerator.createHatchedStripeTexture() 
+      const bayFloor = new THREE.Mesh(new THREE.PlaneGeometry(24, 14), new THREE.MeshLambertMaterial({
+        map: TextureGenerator.createHatchedStripeTexture()
       }));
       bayFloor.rotation.x = -Math.PI / 2;
       bayFloor.position.set(68, 0.12, -22);
@@ -2765,8 +2761,6 @@
 
       const chargeSign = buildSignBoard(68, 4.5, -17, "KHU TẬP KẾT THIẾT BỊ & TRẠM SẠC PIN XE NÂNG", "TRẠM SẠC ẮC QUY 48V/80V • BÌNH BỌT FOAM PCCC • RỬA MẮT KHẨN CẤP", 'info');
       stagingBay.add(chargeSign);
-      
-      
 
       // ===== 7. KHU VỰC HÀNG LẺ CFS / LCL (LCL CONSOLIDATION STATION) =====
       const lclGroup = new THREE.Group();
@@ -2789,10 +2783,10 @@
 
       // ===== 8. TÒA NHÀ VĂN PHÒNG ĐIỀU ĐỘ KHO SA-TRAS (WAREHOUSE ADMIN) =====
       const whOffice = new THREE.Group();
-      const officeMat = new THREE.MeshStandardMaterial({ 
-        color: 0x0f172a, 
-        roughness: 0.2, 
-        metalness: 0.7 
+      const officeMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.2,
+        metalness: 0.7
       });
       const officeBody = new THREE.Mesh(new THREE.BoxGeometry(24, 8, 16), officeMat);
       officeBody.position.set(-25, 4, 18);
@@ -2817,7 +2811,7 @@
 
       // ===== 6. KHO LẠNH THỦY SẢN REEFER LOGISTICS (-20°C) =====
       const wh2 = new THREE.Group();
-      const wh2Mat = new THREE.MeshStandardMaterial({ 
+      const wh2Mat = new THREE.MeshStandardMaterial({
         map: TextureGenerator.createWarehouseTexture('KHO LẠNH REEFER - THỦY HẢI SẢN', 'HỆ THỐNG CẤP ĐÔNG -20°C TÂN CẢNG', '#0f172a'),
         roughness: 0.4
       });
@@ -2836,8 +2830,6 @@
         wh2.add(fanBlade);
         spinningFansList.push(fanBlade);
       }
-      
-      
 
       // ===== 7. QUẦN THỂ BÃI CONTAINER CÁT LÁI KHỔNG LỒ (HÀNG TRĂM CONTAINER - CY & DEPOT) =====
       const yardGroup = new THREE.Group();
@@ -2849,9 +2841,9 @@
         for (let z = 0; z < 4; z++) {
           for (let y = 0; y < 4; y++) {
             const idx = (x + y + z) % contColList.length;
-            const cMat = new THREE.MeshStandardMaterial({ 
+            const cMat = new THREE.MeshStandardMaterial({
               map: TextureGenerator.createContainerTexture(contColList[idx], lines[idx], `CONT-A${x}${y}${z}`),
-              roughness: 0.5 
+              roughness: 0.5
             });
             const cBox = new THREE.Mesh(new THREE.BoxGeometry(2.45, 2.65, 8.5), cMat);
             cBox.position.set(80 + x * 3.3, 1.35 + y * 2.68, -135 + z * 9.5);
@@ -2866,9 +2858,9 @@
         for (let z = 0; z < 4; z++) {
           for (let y = 0; y < 4; y++) {
             const idx = (x * 2 + y + z * 3) % contColList.length;
-            const cMat = new THREE.MeshStandardMaterial({ 
+            const cMat = new THREE.MeshStandardMaterial({
               map: TextureGenerator.createContainerTexture(contColList[idx], lines[idx], `CONT-B${x}${y}${z}`),
-              roughness: 0.5 
+              roughness: 0.5
             });
             const cBox = new THREE.Mesh(new THREE.BoxGeometry(2.45, 2.65, 8.5), cMat);
             cBox.position.set(130 + x * 3.3, 1.35 + y * 2.68, -135 + z * 9.5);
@@ -2882,9 +2874,9 @@
       for (let x = 0; x < 4; x++) {
         for (let z = 0; z < 2; z++) {
           for (let y = 0; y < 3; y++) {
-            const cMat = new THREE.MeshStandardMaterial({ 
+            const cMat = new THREE.MeshStandardMaterial({
               map: TextureGenerator.createContainerTexture('#f8fafc', 'REEFER SNP', `RCLU-${x}${y}${z}`),
-              roughness: 0.3 
+              roughness: 0.3
             });
             const cBox = new THREE.Mesh(new THREE.BoxGeometry(2.45, 2.65, 8.5), cMat);
             cBox.position.set(170 + x * 3.3, 1.35 + y * 2.68, -135 + z * 9.5);
@@ -2956,7 +2948,7 @@
 
       // ===== 10. TÒA NHÀ TRỤ SỞ CHI CỤC HẢI QUAN CỬA KHẨU CẢNG CÁT LÁI (UY NGHI 3 TẦNG) =====
       const customs = new THREE.Group();
-      const hqBuildingMat = new THREE.MeshStandardMaterial({ 
+      const hqBuildingMat = new THREE.MeshStandardMaterial({
         map: TextureGenerator.createCustomsFacadeTexture(),
         roughness: 0.35,
         metalness: 0.4
@@ -3003,10 +2995,6 @@
       const xraySign = buildSignBoard(70, 9.8, 98.6, "HỆ THỐNG MÁY SOI CONTAINER X-RAY EAGLE", "CHI CỤC HẢI QUAN CÁT LÁI • BÃI SOI CHIẾU CHUYÊN DỤNG", 'warning');
       customs.add(xraySign);
 
-      
-      
-      
-
       // ===== 11. KIOSK e-PORT TÂN CẢNG SÀI GÒN =====
       const eportGroup = new THREE.Group();
       const epBuilding = new THREE.Mesh(new THREE.BoxGeometry(22, 6.5, 14), new THREE.MeshStandardMaterial({ color: 0x0369a1, roughness: 0.4 }));
@@ -3014,8 +3002,6 @@
       eportGroup.add(epBuilding);
       const epSign = buildSignBoard(-40, 6.8, 92.8, "TRUNG TÂM DỊCH VỤ KHÁCH HÀNG e-PORT TÂN CẢNG", "THANH TOÁN LỆ PHÍ HẠ BÃI • ĐỔI LỆNH e-EIR TỰ ĐỘNG", 'info');
       eportGroup.add(epSign);
-      addObstacle(-52, -28, 92, 108, "Kiosk Dịch Vụ e-Port Cát Lái");
-      scene.add(eportGroup);
 
       // ===== 12. 100% CẢNG CÁT LÁI: CỔNG VÀO B, CỔNG RA, THÁP TOS & BẾN TÀU KHỔNG LỒ =====
       const portComplex = new THREE.Group();
@@ -3033,10 +3019,9 @@
       barrierArmMesh.position.set(-133, 1.45, 20);
       portComplex.add(barrierArmMesh);
       // Đăng ký thanh barie cổng là vật cản có điều kiện (tự mở khi ePort hoàn thành)
-      addObstacle(-137.5, -128.5, 19, 21, "Thanh Barie Cổng B Cát Lái", true);
 
       // CỔNG RA (GATE-OUT) RIÊNG BIỆT CỦA CẢNG CÁT LÁI
-      const gateOutSignMat = new THREE.MeshBasicMaterial({ 
+      const gateOutSignMat = new THREE.MeshBasicMaterial({
         map: TextureGenerator.createPortGateSignTexture('CẢNG CÁT LÁI - CỔNG RA (GATE-OUT)', 'HƯỚNG RA ĐƯỜNG NGUYỄN THỊ ĐỊNH / ĐỒNG VĂN CỐNG')
       });
       const gateOutSign = new THREE.Mesh(new THREE.BoxGeometry(24, 4, 0.4), gateOutSignMat);
@@ -3049,7 +3034,6 @@
       gateOutP2.position.set(-123, 4.5, -40);
       portComplex.add(gateOutP1);
       portComplex.add(gateOutP2);
-      addObstacle(-149, -121, -41.5, -38.5, "Cổng Ra Cảng Cát Lái (Gate-Out)");
 
       // THÁP HOA TIÊU & ĐIỀU ĐỘ CẢNG CÁT LÁI (TOS CONTROL TOWER) CAO 28M
       const tosTower = new THREE.Group();
@@ -3074,7 +3058,6 @@
       const tosSign = buildSignBoard(-160, 8, -5.5, "TRUNG TÂM ĐIỀU HÀNH TÂN CẢNG CÁT LÁI (TOS TOWER)", "GIÁM SÁT HOA TIÊU LUỒNG HÀNG HẢI SÔNG ĐỒNG NAI", 'info');
       tosTower.add(tosSign);
 
-      addObstacle(-166, -154, -16, -4, "Tháp Điều Hành TOS Cát Lái");
       portComplex.add(tosTower);
 
       // BẾN TÀU & CẦU CẢNG CONTAINER (WHARF & SHIPS)
@@ -3161,8 +3144,6 @@
       buildRealisticHumanWorker(portComplex, -192, 4.2, 5, -Math.PI / 2, 'customs'); // Cán bộ Hải quan giám sát cầu tàu gangway
       buildRealisticHumanWorker(portComplex, -175, 4, 80, 0, 'marshal'); // Tín hiệu viên xi-nhan xe đầu kéo nội bộ cập dầm cẩu bờ STS
       buildRealisticHumanWorker(portComplex, -155, 0, -5, Math.PI, 'technician'); // Điều độ viên TOS liên lạc bộ đàm
-
-      scene.add(portComplex);
 
       // Vòng tròn mốc neon tại 7 địa điểm tương tác
       STATION_LOCATIONS.forEach(st => {
@@ -3455,7 +3436,7 @@
       const r2 = new THREE.Mesh(new THREE.PlaneGeometry(183, 22), new THREE.MeshLambertMaterial({ map: TextureGenerator.createAsphaltTexture() })); r2.rotation.x = -Math.PI / 2; r2.position.set(108.5, .1, 190); r2.receiveShadow = true; scene.add(r2);
       MW_ZONES.push({ x0: 40, x1: 380, z0: -314, z1: -180, t: 'TỔNG KHO SA-TRAS' });
       buildColdStorage(); buildChargingStation(); buildCustomsCompound();
-      buildOrderHalls(); buildPortComplex(); buildVillage(); mwInitWalkUI();
+      buildOrderHalls(); buildPortComplex(); buildVillage(); mwInitWalkUI(); mwBuildPortKiosk();
     }
 
     function mwZoneAt(x, z) { return MW_ZONES.find(a => x > a.x0 && x < a.x1 && z > a.z0 && z < a.z1); }
@@ -3576,7 +3557,7 @@
     let mwHintStep = 0;
     function mwActor() { return window.mwWalking ? mwWalk : truckMesh.position; }
     function mwInStationZone(st, x, z) {
-      const R = st.step === 1 ? { x0: 40, x1: 380, z0: -314, z1: -180 } : st.step === 5 ? { x0: 30, x1: 200, z0: 210, z1: 330 } : null;
+      const R = st.step === 2 ? { x0: 40, x1: 380, z0: -314, z1: -180 } : st.step === 5 ? { x0: 30, x1: 200, z0: 210, z1: 330 } : null;
       return R ? (x > R.x0 && x < R.x1 && z > R.z0 && z < R.z1) : Math.hypot(x - st.x, z - st.z) <= 45;
     }
     function mwBlocked(x, z) {
@@ -3622,6 +3603,7 @@
         window.mwWalking = false; mwWalk.mesh.visible = false; showHUDToast('🚛 ĐÃ LÊN XE.');
       }
       const b = document.getElementById('mw-walk-btn'); if (b) b.textContent = window.mwWalking ? '🚛 LÊN XE [V]' : '🚶 ĐI BỘ [V]';
+      const dl = document.getElementById('drive-label'); if (dl) dl.innerText = window.mwWalking ? 'Lên Xe' : 'Đi Bộ';
     }
     function mwInitWalkUI() {
       const b = document.createElement('button'); b.id = 'mw-walk-btn'; b.textContent = '🚶 ĐI BỘ [V]';
@@ -3630,6 +3612,69 @@
       window.addEventListener('keydown', e => { if (/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return; if (e.code === 'KeyV') mwToggleWalk(); });
     }
 
+    /* ===== LUỒNG ĐỎ: SOI X-RAY -> BÃI KIỂM HÓA -> MỞ SEAL KIỂM THỰC TẾ -> NIÊM PHONG LẠI ===== */
+    function mwRedFlow() {
+      const t = truckMesh.position, st = gameState.redStage || 0;
+      const inX = t.x > 104 && t.x < 126 && t.z > 211 && t.z < 233, inK = t.x > 108 && t.x < 122 && t.z > 238 && t.z < 293;
+      if (window.mwWalking) { showHUDToast('LUỒNG ĐỎ: container phải do xe đưa đi soi/kiểm — hãy lên xe [V] rồi lái đến vị trí yêu cầu.'); return; }
+      if (st === 0) { gameState.redStage = 1; showHUDToast('🔴 LUỒNG ĐỎ: Hải quan yêu cầu soi chiếu + kiểm hóa thực tế. Lái xe vào làn MÁY SOI X-RAY 2 (cổng vòm giữa), dừng dưới vòm rồi nhấn [E].'); return; }
+      if (st === 1) {
+        if (!inX) { showHUDToast('Chưa đúng vị trí: hãy dừng xe dưới cổng vòm MÁY SOI X-RAY 2 rồi nhấn [E].'); return; }
+        const odd = Math.random() < .25; gameState.redStage = 2; soundEngine.playSuccessDing();
+        showHUDToast(odd ? '☢️ X-RAY: ảnh soi có vùng mật độ bất thường so với khai báo — BẮT BUỘC kiểm thực tế. Lái xe vào BÃI KIỂM HÓA (giữa 2 dãy container) rồi nhấn [E].' : '☢️ X-RAY: ảnh soi cơ bản khớp khai báo, vẫn kiểm thực tế theo quyết định luồng đỏ. Lái xe vào BÃI KIỂM HÓA (giữa 2 dãy container) rồi nhấn [E].');
+        return;
+      }
+      if (!inK) { showHUDToast('Chưa đúng vị trí: lái xe vào làn BÃI KIỂM HÓA (giữa 2 dãy container, phía sau cổng vòm) rồi nhấn [E].'); return; }
+      if (!confirm('KIỂM HÓA THỰC TẾ: công chức Hải quan đề nghị cắt seal ' + gameState.sealNo + ' và mở cont ' + gameState.contNo + ' kiểm hàng.\n\nOK = Đồng ý có mặt chứng kiến & ký biên bản.\nCancel = Từ chối (sẽ bị lập biên bản vi phạm).')) {
+        penalize(500000, 8, 'Từ chối/cản trở kiểm hóa thực tế luồng đỏ'); soundEngine.playErrorBuzz(); return;
+      }
+      const hq = 'HQ-' + Math.floor(100000 + Math.random() * 900000);
+      deductFee(450000, 'Phí nâng hạ/mở cont phục vụ kiểm hóa luồng đỏ');
+      gameState.redInspected = true; soundEngine.playSuccessDing();
+      showHUDToast('✅ KIỂM HÓA XONG: hàng đúng khai báo. Cont được niêm phong lại bằng seal Hải quan ' + hq + ' (seal hãng ' + gameState.sealNo + ' đã cắt). Tiếp tục nộp bộ chứng từ giấy.');
+      openCustomsModal();
+    }
+    function mwBuildPortKiosk() {
+      const g = new THREE.Group(), b = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 7), new THREE.MeshStandardMaterial({ color: 0xf1f5f9 })); b.position.set(380, 2.5, 300); g.add(b);
+      const sg = mwLabel('KIOSK e-PORT • TÂN CẢNG SÀI GÒN', 10, 1.6, 34, '#0a246a'); sg.position.set(380, 4, 296.4); sg.rotation.y = Math.PI; g.add(sg);
+      const gl = new THREE.Mesh(new THREE.PlaneGeometry(7, 2.6), new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: .8, roughness: .1 })); gl.position.set(380, 2.2, 296.45); gl.rotation.y = Math.PI; g.add(gl);
+      addObstacle(374.5, 385.5, 296, 304, 'Kiosk e-Port'); scene.add(g);
+    }
+
+    /* ===== CHẶNG 1: GIÁM ĐỊNH VỎ DEPOT (LỖI NGẪU NHIÊN, TỪ CHỐI ĐỔI VỎ) ===== */
+    const MW_DEFECTS = { 1: 'vách tôn móp sâu, thủng ~6cm', 2: 'sàn gỗ ẩm, vết dầu loang', 3: 'gioăng cao su rách ~8cm', 4: 'tay khóa cam cong vênh', 5: 'nóc thủng nhỏ, lọt sáng', 6: 'gù cont nứt mối hàn' };
+    function mwGenDefects(pBad) {
+      if (Math.random() >= pBad) return [];
+      const a = 1 + ((Math.random() * 6) | 0), r = [a];
+      if (Math.random() < .35) { const b = 1 + ((Math.random() * 6) | 0); if (b !== a) r.push(b); }
+      return r;
+    }
+    function mwOpenSurvey() {
+      if (!gameState.contDefects) gameState.contDefects = mwGenDefects(.6);
+      document.getElementById('survey-cont-no').innerText = gameState.contNo;
+      document.getElementById('survey-cont-tare').innerText = `${activeScenario.tare.toLocaleString()} kg`;
+      for (let i = 1; i <= 6; i++) {
+        const ck = document.getElementById('chk-iicl-' + i), sp = ck.parentElement.querySelector('span'); ck.checked = true;
+        if (!sp.dataset.base) sp.dataset.base = sp.innerText;
+        const bad = gameState.contDefects.includes(i);
+        sp.innerText = sp.dataset.base + (bad ? '  ⚠ Ghi nhận hiện trường: ' + MW_DEFECTS[i] : ''); sp.style.color = bad ? '#fca5a5' : '';
+      }
+      let rb = document.getElementById('btn-reject-cont');
+      if (!rb) {
+        rb = document.createElement('button'); rb.id = 'btn-reject-cont'; rb.onclick = mwRejectContainer;
+        rb.className = 'w-full py-2 bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition';
+        rb.textContent = 'TỪ CHỐI VỎ LỖI - YÊU CẦU ĐỔI VỎ KHÁC';
+        const sign = document.querySelector('#modal-survey button[onclick="confirmDepotInspection()"]'); sign.parentNode.appendChild(rb);
+      }
+      document.getElementById('modal-survey').classList.remove('hidden');
+    }
+    function mwRejectContainer() {
+      if (!(gameState.contDefects || []).length) { penalize(300000, 5, 'Từ chối vỏ cont đạt chuẩn - gây chậm trễ Depot'); soundEngine.playErrorBuzz(); alert('BỊ PHẠT 300.000đ: Vỏ cont này không có lỗi, bạn từ chối oan và làm chậm lịch xe.'); return; }
+      gameState.contNo = 'TCLU ' + Math.floor(500000 + Math.random() * 400000) + '-4';
+      gameState.contDefects = mwGenDefects(.2); soundEngine.playSuccessDing();
+      showHUDToast('✅ ĐÃ ĐỔI VỎ: Depot cấp cont mới ' + gameState.contNo + '. Kiểm tra lại 6 điểm trước khi ký nhận.');
+      mwOpenSurvey();
+    }
     function buildPerimeterSecurityFences() {
       const fenceMat = new THREE.MeshLambertMaterial({ color: 0x475569 });
       // Rào phía Bắc (z = -160)
@@ -4306,8 +4351,8 @@
       g.add(roof);
 
       // Bảng chữ nổi CỔNG B TÂN CẢNG CÁT LÁI
-      const signMat = new THREE.MeshBasicMaterial({ 
-        map: TextureGenerator.createPortGateSignTexture('TỔNG CÔNG TY TÂN CẢNG SÀI GÒN - CẢNG CÁT LÁI', 'CỔNG B: 4 LÀN XE CONTAINER CHECK-IN SMARTGATE TỰ ĐỘNG') 
+      const signMat = new THREE.MeshBasicMaterial({
+        map: TextureGenerator.createPortGateSignTexture('TỔNG CÔNG TY TÂN CẢNG SÀI GÒN - CẢNG CÁT LÁI', 'CỔNG B: 4 LÀN XE CONTAINER CHECK-IN SMARTGATE TỰ ĐỘNG')
       });
       const gateSign = new THREE.Mesh(new THREE.BoxGeometry(30, 2.2, 0.3), signMat);
       gateSign.position.set(0, 8.8, -5.9);
@@ -4646,30 +4691,30 @@
       const key = (e.key || '').toLowerCase();
 
       // Tiến / Ga: [W], [Mũi Tên Lên] hoặc gõ Telex 'w' / 'ư'
-      if (code === 'KeyW' || code === 'ArrowUp' || key === 'w' || key === 'ư') { 
-        keysPressed['w'] = true; 
-        e.preventDefault(); 
+      if (code === 'KeyW' || code === 'ArrowUp' || key === 'w' || key === 'ư') {
+        keysPressed['w'] = true;
+        e.preventDefault();
       }
       // Lùi / Phanh: [S], [Mũi Tên Xuống] hoặc gõ Telex 's'
-      if (code === 'KeyS' || code === 'ArrowDown' || key === 's') { 
-        keysPressed['s'] = true; 
-        e.preventDefault(); 
+      if (code === 'KeyS' || code === 'ArrowDown' || key === 's') {
+        keysPressed['s'] = true;
+        e.preventDefault();
       }
       // Rẽ Trái: [A], [Mũi Tên Trái] hoặc gõ Telex 'a'
-      if (code === 'KeyA' || code === 'ArrowLeft' || key === 'a') { 
-        keysPressed['a'] = true; 
-        e.preventDefault(); 
+      if (code === 'KeyA' || code === 'ArrowLeft' || key === 'a') {
+        keysPressed['a'] = true;
+        e.preventDefault();
       }
       // Rẽ Phải: [D], [Mũi Tên Phải] hoặc gõ Telex 'd' / 'đ'
-      if (code === 'KeyD' || code === 'ArrowRight' || key === 'd' || key === 'đ') { 
-        keysPressed['d'] = true; 
-        e.preventDefault(); 
+      if (code === 'KeyD' || code === 'ArrowRight' || key === 'd' || key === 'đ') {
+        keysPressed['d'] = true;
+        e.preventDefault();
       }
       // Phanh Khẩn Cấp / Thắng Hơi: [Space]
-      if (code === 'Space' || key === ' ') { 
-        keysPressed['space'] = true; 
-        applyBrake(true); 
-        e.preventDefault(); 
+      if (code === 'Space' || key === ' ') {
+        keysPressed['space'] = true;
+        applyBrake(true);
+        e.preventDefault();
       }
 
       if (code === 'KeyC' || key === 'c') toggleCameraView();
@@ -4714,6 +4759,7 @@
     }
 
     function toggleDriveMode() {
+      mwToggleWalk(); return;
       gameState.driveMode = !gameState.driveMode;
       const dLbl = document.getElementById('drive-label');
       if (dLbl) dLbl.innerText = gameState.driveMode ? "Đi Bộ" : "Lên Xe";
@@ -5115,7 +5161,7 @@
 
     function updateDrivingPhysics() {
       if (!truckMesh) return;
-      if (window.mwWalking) { gameState.speed = 0; return; }
+      if (window.mwWalking || gameState.cameraMode === 'GOD_MODE') { gameState.speed = 0; return; }
 
       const maxForward = 0.56;
       const maxReverse = -0.24;
@@ -5448,7 +5494,7 @@
       ctx.fillText('7. Chứng chỉ lái xe     ... [Bấm tab 11 Điều Lệ]', 840, 154);
 
       // 4 HỆ THỐNG KHUNG KỆ CÔNG NGHIỆP SA-TRAS (GIỮA NHÀ KHO)
-      
+
       // KỆ 1: SELECTIVE RACKING
       ctx.fillStyle = '#0c4a6e';
       ctx.fillRect(35, 180, 220, 130);
@@ -5510,7 +5556,7 @@
       ctx.fillText('• Tốc độ xuất nhập nhanh', 862, 279);
 
       // KHU VỰC PHÍA DƯỚI: SOẠN HÀNG, HÀNG LẺ & TẬP KẾT XE NÂNG
-      
+
       // KHU VỰC SOẠN HÀNG (ORDER PICKING)
       ctx.fillStyle = '#1e293b';
       ctx.fillRect(35, 325, 260, 95);
@@ -5632,7 +5678,7 @@
     })();
 
     /* =========================================================
-       7. BẢN ĐỒ GOOGLE MAPS TUYẾN ĐƯỜNG KCN TÂN TẠO -> CÁT LÁI
+       8. BẢN ĐỒ GOOGLE MAPS TUYẾN ĐƯỜNG KCN TÂN TẠO -> CÁT LÁI
        ========================================================= */
     function toggleGpsMapModal() {
       const m = document.getElementById('modal-gps-map');
@@ -5805,7 +5851,7 @@
 
       // Tuyến đường vận chuyển container thực tế liên quận TP.HCM
       const pts = [
-        { x: w * 0.12, y: h * 0.75, name: "1. Kho Sa-tras (KCN Tân Tạo)" },
+        { x: w * 0.12, y: h * 0.75, name: "1. Depot → Kho Sa-tras (KCN Tân Tạo)" },
         { x: w * 0.22, y: h * 0.82, name: "Đại lộ Nguyễn Văn Linh" },
         { x: w * 0.45, y: h * 0.78, name: "Cầu Phú Mỹ (Vượt Sông SG)" },
         { x: w * 0.68, y: h * 0.62, name: "Đường Võ Chí Công (Vành Đai 2)" },
@@ -5892,7 +5938,7 @@
     }
 
     /* =========================================================
-       8. ĐIỀU HÀNH 50 ĐỀ BÀI VÀ THAO TÁC 7 CHẶNG
+       9. ĐIỀU HÀNH 50 ĐỀ BÀI VÀ THAO TÁC 7 CHẶNG
        ========================================================= */
     function loadScenario(index) {
       activeScenario = DATABASE_50_SCENARIOS[index];
@@ -5900,6 +5946,7 @@
       gameState.palletCounted = false;
       gameState.sealLocked = false;
       gameState.depotApproved = false;
+      gameState.contDefects = null;
       gameState.vgmPassed = false;
       gameState.customsSubmitted = false;
       gameState.docsCleared = false;
@@ -5913,6 +5960,7 @@
 
       const r = Math.random();
       gameState.channel = r < 0.6 ? 'XANH' : (r < 0.9 ? 'VANG' : 'DO');
+      gameState.redStage = 0; gameState.redInspected = false;
 
       document.getElementById('current-scenario-badge').innerText = `[EXP-${activeScenario.id < 10 ? '0' + activeScenario.id : activeScenario.id}] ${activeScenario.name.slice(0, 16)}...`;
       document.getElementById('doc-cargo-name').innerText = activeScenario.name;
@@ -5938,7 +5986,7 @@
       }
 
       jumpToStep(1);
-      showHUDToast(`ĐÃ NHẬN ĐỀ #${activeScenario.id}: ${activeScenario.name}. Lái xe vào trong Tổng Kho Sa-tras (phím T = ra cổng kho, R = đổi mái)!`);
+      showHUDToast(`ĐÃ NHẬN ĐỀ #${activeScenario.id}: ${activeScenario.name}. Lái xe đến Depot Suối Tiên lấy vỏ cont rỗng, giám định rồi mới về Tổng Kho đóng hàng (phím T = cổng kho, R = đổi mái)!`);
     }
 
     function jumpToStep(step) {
@@ -5978,6 +6026,10 @@
       soundEngine.init();
       switch (gameState.step) {
         case 1:
+          mwOpenSurvey();
+          break;
+
+        case 2:
           if (!gameState.palletCounted) {
             gameState.palletCounted = true;
             soundEngine.playSuccessDing();
@@ -5987,14 +6039,8 @@
             document.getElementById('seal-graphic-code').innerText = gameState.sealNo.split('-')[1];
             document.getElementById('modal-seal').classList.remove('hidden');
           } else {
-            jumpToStep(2);
+            jumpToStep(3);
           }
-          break;
-
-        case 2:
-          document.getElementById('survey-cont-no').innerText = gameState.contNo;
-          document.getElementById('survey-cont-tare').innerText = `${activeScenario.tare.toLocaleString()} kg`;
-          document.getElementById('modal-survey').classList.remove('hidden');
           break;
 
         case 3:
@@ -6008,6 +6054,7 @@
           break;
 
         case 5:
+          if (gameState.channel === 'DO' && !gameState.redInspected) { mwRedFlow(); break; }
           openCustomsModal();
           break;
 
@@ -6025,13 +6072,22 @@
       soundEngine.playSealClick();
       gameState.sealLocked = true;
       closeModal('modal-seal');
-      showHUDToast(`ĐÃ BẤM CHÌ CỐI: Chì số ${gameState.sealNo} đã niêm phong cửa cont. Lên xe đạp ga sang Depot!`);
-      jumpToStep(2);
+      showHUDToast(`ĐÃ BẤM CHÌ CỐI: Chì số ${gameState.sealNo} đã niêm phong cửa cont. Lái xe đến Trạm Cân Nguyễn Thị Định để cân xe & khai VGM!`);
+      jumpToStep(3);
     }
 
     function confirmDepotInspection() {
+      const dfx = gameState.contDefects || [];
+      if (dfx.length) {
+        penalize(800000, 10, 'Ký nhận vỏ cont hỏng: ' + dfx.map(i => MW_DEFECTS[i]).join('; '));
+        alert('BỊ PHẠT 800.000đ: Bạn ký nhận vỏ đang có lỗi (' + dfx.map(i => MW_DEFECTS[i]).join('; ') + '). Hãy bấm "TỪ CHỐI VỎ LỖI" để đổi vỏ khác!');
+        return;
+      }
       const allChecked = [1,2,3,4,5,6].every(i => document.getElementById(`chk-iicl-${i}`).checked);
       if (!allChecked) {
+        showHUDToast('Chưa tick đủ 6 điểm đạt chuẩn — vỏ không có lỗi thì tick lại đủ các điểm rồi ký nhận.'); return;
+      }
+      if (false) {
         penalize(800000, 10, "Ký nhận vỏ container hỏng/thủng rách!");
         alert("BỊ PHẠT 800.000đ: Ký nhận vỏ container bị thủng sàn / rách vách!");
         return;
@@ -6039,8 +6095,8 @@
       soundEngine.playSuccessDing();
       gameState.depotApproved = true;
       closeModal('modal-survey');
-      showHUDToast(`DEPOT ĐÃ KÝ PHIẾU GIAO VỎ CONT: Vỏ đạt chuẩn IICL. Lái xe đến Trạm Cân Nguyễn Thị Định!`);
-      jumpToStep(3);
+      showHUDToast(`DEPOT ĐÃ KÝ PHIẾU GIAO VỎ CONT: Vỏ đạt chuẩn IICL. Lái xe về Tổng Kho Sa-tras để đóng hàng & bấm seal!`);
+      jumpToStep(2);
     }
 
     function submitVgmForm() {
@@ -6139,14 +6195,14 @@
         sortBox.classList.add('hidden');
       } else {
         const isYellow = gameState.channel === 'VANG';
-        banner.className = isYellow 
+        banner.className = isYellow
           ? "p-2.5 rounded-lg border font-bold text-xs flex items-center justify-between bg-amber-950/60 border-amber-500 text-amber-300"
           : "p-2.5 rounded-lg border font-bold text-xs flex items-center justify-between bg-rose-950/60 border-rose-500 text-rose-300";
         text.innerText = isYellow ? "TỜ KHAI LUỒNG VÀNG: PHẢI XUẤT TRÌNH BỘ HỒ SƠ GIẤY" : "TỜ KHAI LUỒNG ĐỎ: HỒ SƠ GIẤY + ĐĂNG KÝ KIỂM HÓA BÃI";
         pill.className = isYellow ? "px-2 py-0.5 rounded text-slate-950 text-[10px] uppercase font-mono font-black bg-amber-400" : "px-2 py-0.5 rounded text-white text-[10px] uppercase font-mono font-black bg-rose-600";
         greenPass.classList.add('hidden');
         sortBox.classList.remove('hidden');
-        
+
         userDocSorting = [...LEGAL_DOC_ORDER].sort(() => Math.random() - 0.5);
         renderSortedDocItems();
       }
@@ -6280,7 +6336,7 @@
     }
 
     /* =========================================================
-       9. TIỆN ÍCH TÀI CHÍNH, MODALS & BỘ CHỌN 50 ĐỀ
+       10. TIỆN ÍCH TÀI CHÍNH, MODALS & BỘ CHỌN 50 ĐỀ
        ========================================================= */
     function penalize(money, repPenalty, reason) {
       gameState.wallet -= money;
@@ -6345,7 +6401,7 @@
         filterScenarios('ALL');
         return;
       }
-      const filtered = DATABASE_50_SCENARIOS.filter(s => 
+      const filtered = DATABASE_50_SCENARIOS.filter(s =>
         s.name.toLowerCase().includes(q) ||
         s.hs.includes(q) ||
         s.pod.toLowerCase().includes(q) ||
@@ -6387,7 +6443,7 @@
     }
 
     /* =========================================================
-       10. KHỞI CHẠY HỆ THỐNG (TỰ ĐỘNG CHẠY NGAY KHI SẴN SÀNG)
+       11. KHỞI CHẠY HỆ THỐNG (TỰ ĐỘNG CHẠY NGAY KHI SẴN SÀNG)
        ========================================================= */
     function bootGame() {
       if (window.__gameStarted) return;
